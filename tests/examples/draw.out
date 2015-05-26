@@ -1,0 +1,129 @@
+/* input: draw.pgn */
+
+[Event "?"]
+[Site "Warsaw ol (08)"]
+[Date "1935.??.??"]
+[Round "?"]
+[White "Alekhine, Alexander A"]
+[Black "Steiner, Lajos J"]
+[Result "1/2-1/2"]
+[ECO "E12j"]
+
+1.Nf3 Nf6 2.c4 b6 3.Nc3 Bb7 4.d4 e6 5.a3 Be7 6.Bf4 O-O 7.Qc2 Nh5 8.Bd2 f5
+9.e3 d6 10.Bd3 g6 11.e4 Nd7 12.O-O-O Ndf6 13.exf5 exf5 14.d5 Nd7 15.Bh6
+Ng7 16.h4 Bf6 17.Ng5 Nc5 18.Be2 Re8 19.Bf3 a5 20.Rde1 a4 21.g4 Nb3+ 22.Kb1
+Rxe1+ 23.Rxe1 Nd4 24.Qd3 Nxf3 25.Qxf3 fxg4 26.Qxg4 Nf5 27.Ne6 Nxh6 28.Qf4
+Qe7 29.Qxh6 Bxc3 30.bxc3 Bc8 31.h5 Bxe6 32.Rxe6 Qh4 33.Rxg6+ hxg6 34.Qxg6+
+Kh8 35.Qh6+ Kg8 36.Qg6+ Kh8 37.Qh6+ Kg8 38.Qg6+ 1/2-1/2
+
+/* command: ./chess libbasic-output.so draw.pgn */
+
+[game_started]	
+[move]	PieceType: 4
+[move]	PieceType: 4
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 4
+[move]	PieceType: 3
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 3
+[move]	PieceType: 3
+[kingside castling]	color: 1
+[move]	PieceType: 0
+[move]	PieceType: 2
+[move]	PieceType: 1
+[move]	PieceType: 4
+[move]	PieceType: 3
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 3
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 4
+[queenside castling]	color: 0
+[move]	PieceType: 0
+[move]	PieceType: 2
+[move]	PieceType: 4
+[piece_taken]	 piece: 5 file: 6 rank: 5
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 6 rank: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 4
+[move]	PieceType: 3
+[move]	PieceType: 4
+[move]	PieceType: 5
+[move]	PieceType: 3
+[move]	PieceType: 4
+[move]	PieceType: 4
+[move]	PieceType: 3
+[move]	PieceType: 2
+[move]	PieceType: 3
+[move]	PieceType: 5
+[move]	PieceType: 2
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 4
+[check]	: color: 0
+[move]	PieceType: 0
+[piece_taken]	 piece: 2 file: 5 rank: 1
+[move]	PieceType: 2
+[check]	: color: 0
+[piece_taken]	 piece: 2 file: 5 rank: 1
+[move]	PieceType: 2
+[move]	PieceType: 4
+[move]	PieceType: 1
+[piece_taken]	 piece: 3 file: 6 rank: 3
+[move]	PieceType: 4
+[piece_taken]	 piece: 4 file: 6 rank: 3
+[move]	PieceType: 1
+[piece_taken]	 piece: 5 file: 7 rank: 4
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 7 rank: 4
+[move]	PieceType: 1
+[move]	PieceType: 4
+[move]	PieceType: 4
+[piece_taken]	 piece: 3 file: 8 rank: 6
+[move]	PieceType: 4
+[move]	PieceType: 1
+[move]	PieceType: 1
+[piece_taken]	 piece: 4 file: 8 rank: 6
+[move]	PieceType: 1
+[piece_taken]	 piece: 4 file: 3 rank: 3
+[move]	PieceType: 3
+[piece_taken]	 piece: 3 file: 3 rank: 3
+[move]	PieceType: 5
+[move]	PieceType: 3
+[move]	PieceType: 5
+[piece_taken]	 piece: 4 file: 5 rank: 6
+[move]	PieceType: 3
+[piece_taken]	 piece: 3 file: 5 rank: 6
+[move]	PieceType: 2
+[move]	PieceType: 1
+[piece_taken]	 piece: 5 file: 7 rank: 6
+[move]	PieceType: 2
+[check]	: color: 1
+[piece_taken]	 piece: 2 file: 7 rank: 6
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 7 rank: 6
+[move]	PieceType: 1
+[check]	: color: 1
+[move]	PieceType: 0
+[move]	PieceType: 1
+[check]	: color: 1
+[move]	PieceType: 0
+[move]	PieceType: 1
+[check]	: color: 1
+[move]	PieceType: 0
+[move]	PieceType: 1
+[check]	: color: 1
+[move]	PieceType: 0
+[move]	PieceType: 1
+[check]	: color: 1
+[draw]	
+[game_finished]	
+
+/* return value: 0 */

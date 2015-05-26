@@ -1,0 +1,126 @@
+/* input: stalemate_enpassant.pgn */
+
+[Event "YAKAfight"]
+[Site "lab"]
+[Date "2013.03.04"]
+[Round "1"]
+[White "lepage_a"]
+[Black "chen_a"]
+[Result "1/2-1/2"]
+[Time "23:16:30"]
+
+1. e4 b5 2. d3 c5 3. c4 b4 4. a4 bxa3 5. bxa3 Nc6 6. h4 Ba6 7. Nh3 Qa5+ 8. Nc3
+O-O-O 9. Qa4 Qxa4 10. Nxa4 Bxc4 11. Nxc5 Ba2 12. a4 a6 13. Nxa6 d5 14. a5 dxe4
+15. Nc7 Kxc7 16. a6 g5 17. a7 g4 18. a8=Q gxh3 19. Qxa2 e3 20. fxe3 Nf6 21.
+Be2 h5 22. O-O Rxd3 23. Bxd3 Ne4 24. Bxe4 Nd4 25. exd4 Kb6 26. d5 e5 27. dxe6
+f5 28. e7 fxe4 29. exf8=Q e3 30. Qxh8 h2+ 31. Kxh2 e2 32. Qc4 e1=Q 33. Rxe1
+Kb7 34. g3 Kb6 35. Re7 1/2-1/2
+
+/* command: ./chess libbasic-output.so stalemate_enpassant.pgn */
+
+[game_started]	
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 1 rank: 4
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 1 rank: 3
+[move]	PieceType: 5
+[move]	PieceType: 4
+[move]	PieceType: 5
+[move]	PieceType: 3
+[move]	PieceType: 4
+[move]	PieceType: 1
+[check]	: color: 0
+[move]	PieceType: 4
+[queenside castling]	color: 1
+[move]	PieceType: 0
+[move]	PieceType: 2
+[move]	PieceType: 1
+[piece_taken]	 piece: 1 file: 1 rank: 4
+[move]	PieceType: 1
+[piece_taken]	 piece: 1 file: 1 rank: 4
+[move]	PieceType: 4
+[piece_taken]	 piece: 5 file: 3 rank: 4
+[move]	PieceType: 3
+[piece_taken]	 piece: 5 file: 3 rank: 5
+[move]	PieceType: 4
+[move]	PieceType: 3
+[move]	PieceType: 5
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 1 rank: 6
+[move]	PieceType: 4
+[move]	PieceType: 5
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 5 rank: 4
+[move]	PieceType: 5
+[move]	PieceType: 4
+[piece_taken]	 piece: 4 file: 3 rank: 7
+[move]	PieceType: 0
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[piece_promoted]	 piece: 1 file: 1 rank: 8
+[piece_taken]	 piece: 4 file: 8 rank: 3
+[move]	PieceType: 5
+[piece_taken]	 piece: 3 file: 1 rank: 2
+[move]	PieceType: 1
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 5 rank: 3
+[move]	PieceType: 5
+[move]	PieceType: 4
+[move]	PieceType: 3
+[move]	PieceType: 5
+[kingside castling]	color: 0
+[move]	PieceType: 0
+[move]	PieceType: 2
+[piece_taken]	 piece: 5 file: 4 rank: 3
+[move]	PieceType: 2
+[piece_taken]	 piece: 2 file: 4 rank: 3
+[move]	PieceType: 3
+[move]	PieceType: 4
+[piece_taken]	 piece: 4 file: 5 rank: 4
+[move]	PieceType: 3
+[move]	PieceType: 4
+[piece_taken]	 piece: 4 file: 4 rank: 4
+[move]	PieceType: 5
+[move]	PieceType: 0
+[move]	PieceType: 5
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 5 rank: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[piece_taken]	 piece: 3 file: 5 rank: 4
+[move]	PieceType: 5
+[piece_taken]	 piece: 3 file: 6 rank: 8
+[move]	PieceType: 5
+[piece_promoted]	 piece: 1 file: 6 rank: 8
+[move]	PieceType: 5
+[piece_taken]	 piece: 2 file: 8 rank: 8
+[move]	PieceType: 1
+[move]	PieceType: 5
+[check]	: color: 0
+[piece_taken]	 piece: 5 file: 8 rank: 2
+[move]	PieceType: 0
+[move]	PieceType: 5
+[move]	PieceType: 1
+[move]	PieceType: 5
+[piece_promoted]	 piece: 1 file: 5 rank: 1
+[piece_taken]	 piece: 1 file: 5 rank: 1
+[move]	PieceType: 2
+[move]	PieceType: 0
+[move]	PieceType: 5
+[move]	PieceType: 0
+[move]	PieceType: 2
+[pat]	: color: 1
+[draw]	
+[game_finished]	
+
+/* return value: 0 */

@@ -1,0 +1,36 @@
+/* input: lost.pgn */
+
+[Event "?"]
+[Site "Portugal"]
+[Date "1941.??.??"]
+[Round "?"]
+[White "Alekhine, Alexander A"]
+[Black "Cruz"]
+[Result "1-0"]
+
+1.e4 e5 2.Nf3 Nf6 3.d4 exd4 4.e5 Nd5 5.Qxd4 Nb4 6.Na3 N4c6 7.Qf4 Be7 8.Bd3 *
+
+/* command: ./chess libbasic-output.so lost.pgn */
+
+[game_started]	
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 4
+[move]	PieceType: 4
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 4 rank: 4
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 4
+[piece_taken]	 piece: 5 file: 4 rank: 4
+[move]	PieceType: 1
+[move]	PieceType: 4
+[move]	PieceType: 4
+[move]	PieceType: 4
+[move]	PieceType: 1
+[move]	PieceType: 3
+[move]	PieceType: 3
+[disqualified]	: color: 1
+[game_finished]	
+
+/* return value: 2 */

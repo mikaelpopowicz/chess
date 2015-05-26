@@ -1,0 +1,90 @@
+/* input: invalid.pgn */
+
+[Event "?"]
+[Site "?"]
+[Date "1904.??.??"]
+[Round "?"]
+[White "Giese"]
+[Black "Alekhine, Alexander A"]
+[Result "0-1"]
+[ECO "C33"]
+
+1.e4 e5 2.f4 exf4 3.Bc4 d5 4.Bxd5 Qh4+ 5.Kf1 g5 6.Nc3 Ne7 7.d4 Bg7 8.Nf3
+Qh5 9.h4 h6 10.e5 Nbc6 11.Kg1 g4 12.Ne1 Bf5 13.Bxc6+ Nxc6 14.Ne2 Be4 15.
+Bxf4 Qf5 16.Qd2 O-O-O 17.Ng3 Qh7 18.Qe2 Nxd4 19.Qc4 Bc6 20.c3 Ne6 21.Qf1
+h5 22.Bg5 Bxe5 23.Bxd8 Bxg3 24.Bf6 Qe4 25.Nd3 Nf4 26.Rh3 Qe3+ 27.Na7 Nxh3+
+28.gxh3 Bh2+ 29.Kxh2 Qf4+ 30.Kg1 Qg3+ 31.Qg2 Qxg2# 0-1
+
+/* command: ./chess libbasic-output.so invalid.pgn */
+
+[game_started]	
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 6 rank: 4
+[move]	PieceType: 5
+[move]	PieceType: 3
+[move]	PieceType: 5
+[piece_taken]	 piece: 5 file: 4 rank: 5
+[move]	PieceType: 3
+[move]	PieceType: 1
+[check]	: color: 0
+[move]	PieceType: 0
+[move]	PieceType: 5
+[move]	PieceType: 4
+[move]	PieceType: 4
+[move]	PieceType: 5
+[move]	PieceType: 3
+[move]	PieceType: 4
+[move]	PieceType: 1
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 5
+[move]	PieceType: 4
+[move]	PieceType: 0
+[move]	PieceType: 5
+[move]	PieceType: 4
+[move]	PieceType: 3
+[piece_taken]	 piece: 4 file: 3 rank: 6
+[move]	PieceType: 3
+[check]	: color: 1
+[piece_taken]	 piece: 3 file: 3 rank: 6
+[move]	PieceType: 4
+[move]	PieceType: 4
+[move]	PieceType: 3
+[piece_taken]	 piece: 5 file: 6 rank: 4
+[move]	PieceType: 3
+[move]	PieceType: 1
+[move]	PieceType: 1
+[queenside castling]	color: 1
+[move]	PieceType: 0
+[move]	PieceType: 2
+[move]	PieceType: 4
+[move]	PieceType: 1
+[move]	PieceType: 1
+[piece_taken]	 piece: 5 file: 4 rank: 4
+[move]	PieceType: 4
+[move]	PieceType: 1
+[move]	PieceType: 3
+[move]	PieceType: 5
+[move]	PieceType: 4
+[move]	PieceType: 1
+[move]	PieceType: 5
+[move]	PieceType: 3
+[piece_taken]	 piece: 5 file: 5 rank: 5
+[move]	PieceType: 3
+[piece_taken]	 piece: 2 file: 4 rank: 8
+[move]	PieceType: 3
+[piece_taken]	 piece: 4 file: 7 rank: 3
+[move]	PieceType: 3
+[move]	PieceType: 3
+[move]	PieceType: 1
+[move]	PieceType: 4
+[move]	PieceType: 4
+[move]	PieceType: 2
+[move]	PieceType: 1
+[check]	: color: 0
+[disqualified]	: color: 0
+[game_finished]	
+
+/* return value: 2 */
