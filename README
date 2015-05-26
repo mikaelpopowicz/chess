@@ -1,0 +1,13 @@
+Chess
+========
+
+[Description]
+
+How to launch
+-------------
+If the executable 'chess' does not exist :  
+    `cmake .`  
+    `make`  
+
+Then,  
+    `./chess [options] [libs] [PGNfile]`
