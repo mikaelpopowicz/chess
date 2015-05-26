@@ -9,15 +9,17 @@ class ParserPGN
 {
 public:
   //Insert methods here
-  ParserPGN();
+  ParserPGN(std::string filename)
+    : filename_(filename)
+  {}
   bool parse();
-  std::vector<Move> get_white_moves();
-  std::vector<Move> get_black_moves();
+  std::vector<Move> get_white_move();
+  std::vector<Move> get_black_move();
 
 private:
   std::vector<Move> white_player_move_;
   std::vector<Move> black_player_move_;
-  //Insert args here
+  std::string filename_;
 };
 
 
