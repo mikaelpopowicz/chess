@@ -31,35 +31,41 @@ bool ParserPGN::parse()
   if (file.eof())
     return false;
 
-  int nb_move = 0;
-  unsigned int index = 0;
-  //we get the move's number
-  while (token[index] != '.')
-    nb_move = nb_move * 10 + token[index++] - '0';
+  //int old_nb_move;
 
-  if (token.length() == (++index))
-    //There is a space between the move number and the first move
+  while (!file.eof())
     {
+      int nb_move = 0;
+      unsigned int index = 0;
+      //we get the move's number
+      while (token[index] != '.')
+        nb_move = nb_move * 10 + token[index++] - '0';
+      if (token.length() == (++index))
+        //There is a space between the move number and the first move
+        {
+          file >> token;
+          index = 0;
+        }
+
+      std::string white_move = token.substr(index);
+      std::string black_move;
+      file >> black_move;
+      std::cout << nb_move << "  White move: " << white_move << "  Black_move: " << black_move << std::endl;
+
+      //old_nb_move = nb_move;
       file >> token;
-      index = 0;
-    }
-
-  std::string white_move = token.substr(index);
-  std::string black_move;
-  file >> black_move;
-  std::cout << nb_move << "  White move: " << white_move << "  Black_move: " << black_move << std::endl;
 /*
-    skip headers
+        skip headers
 
-    get move number
-    skip every spaces
-    get white move
-    skipo spaces
-    get black move
-    skip space
-    repeat
-   */
-
+        get move number
+        skip every spaces
+        get white move
+        skipo spaces
+        get black move
+        skip space
+        repeat
+      */
+    }
   return true;
 }
 
