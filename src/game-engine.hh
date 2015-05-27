@@ -1,10 +1,10 @@
 #ifndef GAME_ENGINE_HH
 # define GAME_ENGINE_HH
 
-#include <vector>
-#include "player.hh"
-#include "observer.hh"
-#include "chessboard.hh"
+# include <vector>
+# include "player.hh"
+# include "observer.hh"
+# include "chessboard.hh"
 
 /*!
 ** \brief The game engine, which check moves, rules and play the game
@@ -43,4 +43,6 @@ protected:
   bool check_rules();
   void add_history(Chessboard cb);
   void clear_history();
-}
+};
+
+#endif /*! GAME_ENGINE_HH */
