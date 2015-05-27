@@ -3,7 +3,7 @@
 #include "color.hh"
 #include "piece-type.hh"
 
-#include <iostream>
+#include <vector>
 
 Chessboard::Chessboard()
   : king_moved_(false),
@@ -100,4 +100,52 @@ bool Chessboard::make_move(Move m)
   }
 
   return true;
+}
+
+std::vector<Position> Chessboard::possible_moves_from(Position pos)
+{
+  Piece p = get_piece_pos(pos);
+  std::vector<Position> moves;
+
+  // Add simple moves
+  if (p.get_type() == PAWN)
+  {
+    int way = 1;
+    if (p.get_color() == BLACK)
+      way = -1;
+    moves.push_back(Position(pos.file_get(),
+                    static_cast<Position::Rank>(pos.rank_get() + way)));
+    // 2 cases if first move
+    if ((p.get_color() == WHITE && pos.rank_get() == Position::ZWEI)
+        || (p.get_color() == BLACK && pos.rank_get() == Position::SIEBEN))
+      moves.push_back(Position(pos.file_get(),
+                      static_cast<Position::Rank>(pos.rank_get() + way * 2)));
+  }
+  else if (p.get_type() == ROOK)
+  {
+    for (Position::Rank r = ++(pos.rank_get()); r < Position::RANK_LAST; ++r)
+    {
+      Piece tmp = get_piece(pos.file_get(), r);
+      if (tmp.get_type() != NONE && tmp.get_color() == p.get_color())
+        break;
+      moves.push_back(Position(pos.file_get(), r));
+      if (tmp.get_type() != NONE)
+        break;
+    }
+  }
+  else if (p.get_type() == KNIGHT)
+  {
+  }
+  else if (p.get_type() == BISHOP)
+  {
+  }
+  else if (p.get_type() == QUEEN)
+  {
+  }
+  else if (p.get_type() == KING)
+  {
+  }
+  // For each move, check if there's a piece of the same color on it
+
+  return moves;
 }

@@ -4,6 +4,7 @@
 # include "piece.hh"
 # include "move.hh"
 # include "position.hh"
+# include <vector>
 
 #define SIZE 8
 
@@ -16,6 +17,7 @@ public:
   Piece get_piece_pos(Position p);
   Piece get_piece(Position::File f, Position::Rank r);
   bool make_move(Move m);
+  std::vector<Position> possible_moves_from(Position pos);
 
 protected:
   Piece board_[SIZE][SIZE];
