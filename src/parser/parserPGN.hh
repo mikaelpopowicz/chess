@@ -9,9 +9,7 @@
 class ParserPGN
 {
 public:
-  ParserPGN(std::string filename)
-    : filename_(filename)
-  {}
+  ParserPGN(std::string filename);
   ~ParserPGN();
   bool parse();
   std::vector<Move> get_white_move();
