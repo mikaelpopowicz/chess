@@ -50,8 +50,16 @@ bool ParserPGN::parse()
       std::string white_move = token.substr(index);
       std::string black_move;
       file >> black_move;
+      bool is_the_end = false;
+      if (black_move[black_move.length() - 1] == '#')
+        {
+          is_the_end = true;
+          black_move = black_move.substr(0, black_move.length() - 1);
+        }
       std::cout << nb_move << "  White move: " << white_move << "  Black_move: " << black_move << std::endl;
 
+      if (is_the_end)
+        break;
       //old_nb_move = nb_move;
       file >> token;
 /*
