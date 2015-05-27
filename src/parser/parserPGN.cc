@@ -31,7 +31,7 @@ bool ParserPGN::parse()
   if (file.eof())
     return false;
 
-  //int old_nb_move;
+  int old_nb_move = 0;
 
   while (!file.eof())
     {
@@ -40,6 +40,8 @@ bool ParserPGN::parse()
       //we get the move's number
       while (token[index] != '.')
         nb_move = nb_move * 10 + token[index++] - '0';
+      if (nb_move != old_nb_move + 1)
+        return false;
       if (token.length() == (++index))
         //There is a space between the move number and the first move
         {
@@ -60,7 +62,7 @@ bool ParserPGN::parse()
 
       if (is_the_end)
         break;
-      //old_nb_move = nb_move;
+      old_nb_move = nb_move;
       file >> token;
 /*
         skip headers
