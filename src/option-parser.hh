@@ -22,6 +22,7 @@ public:
   std::string getFile();
   std::vector<std::string> getLibs();
   void print();
+  void printUsage();
   
 private:
   int argc_;

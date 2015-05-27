@@ -48,8 +48,6 @@ bool OptionParser::parse()
     if ((this->player1_ == "" || this->player2_ == "") && this->pgn_ == false)
         this->error_ = true;
 
-
-
     return !(this->error_);
 }
 
@@ -111,4 +109,11 @@ void OptionParser::print()
     std::cout << "PGN file :\t" << this->file_ << std::endl;
     std::cout << "PLayer white:\t" << this->player1_ << std::endl;
     std::cout << "PLayer black:\t" << this->player2_ << std::endl;
+}
+
+void OptionParser::printUsage()
+{
+    std::string usage = "Usage: ./chess [--player-white=[human | *.so]";
+    usage.append(" --player-black=[human | *.so ]] [*.so ...] [file.pgn]");
+    std::cerr << usage << std::endl;
 }
