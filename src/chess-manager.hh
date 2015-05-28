@@ -3,6 +3,8 @@
 
 # include <string>
 # include <vector>
+# include "player/player.hh"
+# include "parser/parserPGN.hh"
 
 /*!
 ** \brief Chess manager (main)
@@ -22,6 +24,9 @@ public:
 private:
   int argc_;
   char **argv_;
+  Player white_;
+  Player black_;
+  void createPGNplayers(ParserPGN parser)
 };
 
 #endif /* !CHESS_MANAGER_HH_ */
