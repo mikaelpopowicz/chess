@@ -4,6 +4,7 @@
 # include <string>
 # include <vector>
 # include "player/player.hh"
+# include "player/player-pgn.hh"
 # include "parser/parserPGN.hh"
 
 /*!
@@ -24,9 +25,8 @@ public:
 private:
   int argc_;
   char **argv_;
-  Player white_;
-  Player black_;
-  void createPGNplayers(ParserPGN parser)
+  std::vector<Player*> players_;
+  void createPGNplayers(ParserPGN parser);
 };
 
 #endif /* !CHESS_MANAGER_HH_ */

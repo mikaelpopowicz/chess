@@ -5,6 +5,8 @@
 # include "../color.hh"
 # include "../move.hh"
 # include "../piece-type.hh"
+# include <vector>
+# include <string>
 
 /*!
 ** \brief Chess manager (main)
@@ -12,9 +14,9 @@
 class PlayerPGN : public Player
 {
 public:
-  PlayerPGN(Color color);
+  PlayerPGN(Color color, std::vector<std::string> moves);
   ~PlayerPGN();
-  
+
   /*!
   ** Set the last Move played by the opponent.
   */
@@ -24,6 +26,8 @@ public:
   ** Return the next Move to be played by the Player.
   */
   Move move_get();
+
+  void setMoves(std::vector<std::string> moves);
 
 private:
   std::vector<std::string> moves_;

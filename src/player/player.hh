@@ -1,9 +1,9 @@
 #ifndef PLAYER_HH_
 # define PLAYER_HH_
 
-# include "color.hh"
-# include "move.hh"
-# include "piece-type.hh"
+# include "../color.hh"
+# include "../move.hh"
+# include "../piece-type.hh"
 
 /*!
 ** \brief Highest player representation.

@@ -7,12 +7,12 @@ ParserPGN::ParserPGN(std::string filename)
 ParserPGN::~ParserPGN()
 {}
 
-std::vector<Move> ParserPGN::get_black_move()
+std::vector<std::string> ParserPGN::get_black_move()
 {
   return black_player_move_;
 }
 
-std::vector<Move> ParserPGN::get_white_move()
+std::vector<std::string> ParserPGN::get_white_move()
 {
   return white_player_move_;
 }
@@ -82,6 +82,5 @@ bool ParserPGN::parse()
 Move ParserPGN::get_move_from_string(std::string move)
 {
   move = move;
-  Move new_move;
-  return new_move;
+  return Move();
 }
