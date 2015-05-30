@@ -33,6 +33,10 @@ public:
 
 private:
   std::vector<std::string> moves_;
+  std::vector<std::string>::iterator iterator;
+
+  Move little_rock();
+  Move big_rock();
 };
 
 #endif /* !PLAYER_PGN_HH_ */

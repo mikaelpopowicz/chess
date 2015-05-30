@@ -38,6 +38,13 @@ int ChessManager::go()
     }
     this->white_->print();
     this->black_->print();
+    this->white_->move_get();
+    this->white_->move_get();
+    this->white_->move_get();
+    this->white_->move_get();
+    this->white_->move_get();
+    this->white_->move_get();
+    this->white_->move_get();
     return 0;
   }
   else
