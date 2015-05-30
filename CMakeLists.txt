@@ -12,13 +12,14 @@ file (
   src/main.cc
   src/parser/parserPGN.cc
   src/parser/option-parser.cc
-  src/player.cc
-  src/player-pgn.cc
+  src/player/player.cc
+  src/player/player-pgn.cc
   src/chess-manager.cc
   src/color.cc
   src/move.cc
   src/piece-type.cc
   src/position.cc
+  src/player/player-abstract.cc
 )
 
 # Executable declaration

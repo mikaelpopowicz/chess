@@ -7,11 +7,12 @@
 # include "../piece-type.hh"
 # include <vector>
 # include <string>
+# include "player-abstract.hh"
 
 /*!
 ** \brief Chess manager (main)
 */
-class PlayerPGN : public Player
+class PlayerPGN : public PlayerAbstract
 {
 public:
   PlayerPGN(Color color, std::vector<std::string> moves);
