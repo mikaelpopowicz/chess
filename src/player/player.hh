@@ -23,6 +23,7 @@ public:
   ** Return the next Move to be played by the Player.
   */
   virtual Move move_get() = 0;
+  virtual void print() =0;
 
   Color color_get() const;
 

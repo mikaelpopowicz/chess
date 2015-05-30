@@ -25,7 +25,8 @@ public:
 private:
   int argc_;
   char **argv_;
-  std::vector<Player*> players_;
+  Player *white_;
+  Player *black_;
   void createPGNplayers(ParserPGN parser);
 };
 

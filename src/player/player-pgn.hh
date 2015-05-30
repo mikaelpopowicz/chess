@@ -28,6 +28,7 @@ public:
   Move move_get();
 
   void setMoves(std::vector<std::string> moves);
+  void print();
 
 private:
   std::vector<std::string> moves_;

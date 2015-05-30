@@ -20,7 +20,7 @@ std::vector<std::string> ParserPGN::get_white_move()
 bool ParserPGN::parse()
 {
   std::string filename = "../../tests/examples/valid.out";
-  std::ifstream file(filename);
+  std::ifstream file(this->filename_);
   if (!file)
     return false;
 

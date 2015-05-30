@@ -7,7 +7,18 @@ ChessManager::ChessManager(int argc, char **argv)
 {}
 
 ChessManager::~ChessManager()
-{}
+{
+  if (this->white_ != NULL)
+  {
+    this->white_ = NULL;
+    delete this->white_;
+  }
+  if (this->black_ != NULL)
+  {
+    this->black_ = NULL;
+    delete this->black_;
+  }
+}
 
 int ChessManager::go()
 {
@@ -25,6 +36,8 @@ int ChessManager::go()
     else
     {
     }
+    this->white_->print();
+    this->black_->print();
     return 0;
   }
   else
@@ -37,8 +50,6 @@ int ChessManager::go()
 
 void ChessManager::createPGNplayers(ParserPGN parser)
 {
-  PlayerPGN *white = new PlayerPGN(Color::WHITE, parser.get_white_move());
-  PlayerPGN *black = new PlayerPGN(Color::BLACK, parser.get_black_move());
-  this->players_.push_back(white);
-  this->players_.push_back(black);
+  this->white_ = new PlayerPGN(Color::WHITE, parser.get_white_move());
+  this->black_ = new PlayerPGN(Color::BLACK, parser.get_black_move());
 }

@@ -21,3 +21,21 @@ void PlayerPGN::setMoves(std::vector<std::string> moves)
 {
   this->moves_ = moves;
 }
+
+void PlayerPGN::print()
+{
+  std::cout << "=======================" << std::endl;
+  std::cout << "==== player  print ====" << std::endl;
+  if (this->color_ == Color::WHITE)
+    std::cout << "White player" << std::endl;
+  else if (this->color_ == Color::BLACK)
+    std::cout << "Black player" << std::endl;
+
+  int i(1);
+  for (std::string st : this->moves_)
+  {
+    std::cout << "Move " << i << " : " << st << std::endl;
+    ++i;
+  }
+  std::cout << "=======================" << std::endl;
+}
