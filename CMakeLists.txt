@@ -20,6 +20,7 @@ file (
   src/move.cc
   src/piece-type.cc
   src/position.cc
+  src/player/player-abstract.cc
 )
 
 # Executable declaration

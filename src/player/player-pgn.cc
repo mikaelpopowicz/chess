@@ -1,7 +1,7 @@
 #include "player-pgn.hh"
 
 PlayerPGN::PlayerPGN(Color color, std::vector<std::string> moves)
-  : Player(color)
+  : PlayerAbstract(color)
   , moves_(moves)
 {}
 
@@ -15,6 +15,7 @@ void PlayerPGN::last_opponent_move_set(const Move& last_opponent_move)
 
 Move PlayerPGN::move_get()
 {
+
   return Move();
 }
 void PlayerPGN::setMoves(std::vector<std::string> moves)
