@@ -5,6 +5,7 @@
 # include <vector>
 # include "player/player.hh"
 # include "player/player-pgn.hh"
+# include "player/player-human.hh"
 # include "parser/parserPGN.hh"
 
 /*!
@@ -15,7 +16,7 @@ class ChessManager
 public:
   ChessManager(int argc, char **argv);
   ~ChessManager();
-  
+
   /*!
   ** Parse the command line options
   ** @return bool If errors occured

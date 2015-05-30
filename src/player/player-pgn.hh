@@ -5,6 +5,7 @@
 # include "../color.hh"
 # include "../move.hh"
 # include "../piece-type.hh"
+# include "../position.hh"
 # include <vector>
 # include <string>
 

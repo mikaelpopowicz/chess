@@ -231,6 +231,30 @@ src/parser/parserPGN.cc.s:
 	$(MAKE) -f CMakeFiles/chess.dir/build.make CMakeFiles/chess.dir/src/parser/parserPGN.cc.s
 .PHONY : src/parser/parserPGN.cc.s
 
+src/player/player-human.o: src/player/player-human.cc.o
+.PHONY : src/player/player-human.o
+
+# target to build an object file
+src/player/player-human.cc.o:
+	$(MAKE) -f CMakeFiles/chess.dir/build.make CMakeFiles/chess.dir/src/player/player-human.cc.o
+.PHONY : src/player/player-human.cc.o
+
+src/player/player-human.i: src/player/player-human.cc.i
+.PHONY : src/player/player-human.i
+
+# target to preprocess a source file
+src/player/player-human.cc.i:
+	$(MAKE) -f CMakeFiles/chess.dir/build.make CMakeFiles/chess.dir/src/player/player-human.cc.i
+.PHONY : src/player/player-human.cc.i
+
+src/player/player-human.s: src/player/player-human.cc.s
+.PHONY : src/player/player-human.s
+
+# target to generate assembly for a file
+src/player/player-human.cc.s:
+	$(MAKE) -f CMakeFiles/chess.dir/build.make CMakeFiles/chess.dir/src/player/player-human.cc.s
+.PHONY : src/player/player-human.cc.s
+
 src/player/player-pgn.o: src/player/player-pgn.cc.o
 .PHONY : src/player/player-pgn.o
 
@@ -327,6 +351,9 @@ help:
 	@echo "... src/parser/parserPGN.o"
 	@echo "... src/parser/parserPGN.i"
 	@echo "... src/parser/parserPGN.s"
+	@echo "... src/player/player-human.o"
+	@echo "... src/player/player-human.i"
+	@echo "... src/player/player-human.s"
 	@echo "... src/player/player-pgn.o"
 	@echo "... src/player/player-pgn.i"
 	@echo "... src/player/player-pgn.s"
