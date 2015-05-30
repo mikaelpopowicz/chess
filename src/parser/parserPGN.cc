@@ -19,7 +19,6 @@ std::vector<std::string> ParserPGN::get_white_move()
 
 bool ParserPGN::parse()
 {
-  std::string filename = "../../tests/examples/valid.out";
   std::ifstream file(this->filename_);
   if (!file)
     return false;
@@ -58,7 +57,8 @@ bool ParserPGN::parse()
           is_the_end = true;
           black_move = black_move.substr(0, black_move.length() - 1);
         }
-      std::cout << nb_move << "  White move: " << white_move << "  Black_move: " << black_move << std::endl;
+      white_player_move_.push_back(white_move);
+      black_player_move_.push_back(black_move);
 
       if (is_the_end)
         break;
