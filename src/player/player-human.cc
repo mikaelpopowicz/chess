@@ -24,7 +24,7 @@ Move PlayerHuman::move_get()
       this->rankMap_[initial.substr(1, 1)]);
     Position endPos(this->fileMap_[end.substr(0, 1)],
       this->rankMap_[end.substr(1, 1)]);
-    return Move(initialPos, endPos, this->pieceMap_[piece]);
+    return Move(initialPos, endPos);
   }
   return Move();
 }
