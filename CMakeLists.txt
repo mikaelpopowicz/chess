@@ -14,6 +14,7 @@ file (
   src/parser/option-parser.cc
   src/player/player.cc
   src/player/player-pgn.cc
+  src/player/player-human.cc
   src/chess-manager.cc
   src/color.cc
   src/move.cc

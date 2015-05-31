@@ -32,10 +32,21 @@ int ChessManager::go()
         createPGNplayers(parserPGN);
       else
         return 2;
+      this->white_->print();
+      this->black_->print();
     }
     else
     {
+      if (opt.getWhitePlayer() == "human")
+      {
+        this->white_ = new PlayerHuman(Color::WHITE);
+        std::cout << this->white_->move_get() << std::endl;
+      }
+
+      if (opt.getBlackPlayer() == "human")
+        this->black_ = new PlayerHuman(Color::BLACK);
     }
+
     this->white_->print();
     this->black_->print();
     this->white_->move_get();
@@ -45,6 +56,7 @@ int ChessManager::go()
     this->white_->move_get();
     this->white_->move_get();
     this->white_->move_get();
+
     return 0;
   }
   else

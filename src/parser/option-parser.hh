@@ -12,7 +12,7 @@ class OptionParser
 public:
   OptionParser(int argc, char **argv);
   ~OptionParser();
-  
+
   /*!
   ** Parse the command line options
   ** @return bool If errors occured
@@ -20,10 +20,12 @@ public:
   bool parse();
   bool isPgn();
   std::string getFile();
+  std::string getWhitePlayer();
+  std::string getBlackPlayer();
   std::vector<std::string> getLibs();
   void print();
   void printUsage();
-  
+
 private:
   int argc_;
   char **argv_;
