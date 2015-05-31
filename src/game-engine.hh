@@ -2,7 +2,7 @@
 # define GAME_ENGINE_HH
 
 # include <vector>
-# include "player.hh"
+# include "player/player.hh"
 # include "move.hh"
 //# include "observer.hh"
 # include "chessboard.hh"

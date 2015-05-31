@@ -3,7 +3,7 @@
 
 # include <string>
 
-# include "player.hh"
+# include "player/player.hh"
 
 /*!
 ** \brief The interface of the artificial intelligence.

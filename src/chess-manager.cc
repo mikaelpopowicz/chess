@@ -49,14 +49,12 @@ int ChessManager::go()
 
     this->white_->print();
     this->black_->print();
-    this->white_->move_get();
-    this->white_->move_get();
-    this->white_->move_get();
-    this->white_->move_get();
-    this->white_->move_get();
-    this->white_->move_get();
-    this->white_->move_get();
 
+    for (int i = 0; i < 20; i++)
+    {
+      Move move = this->black_->move_get();
+      std::cout << move << std::endl;
+    }
     return 0;
   }
   else
