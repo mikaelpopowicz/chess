@@ -61,6 +61,16 @@ std::string OptionParser::getFile()
     return this->file_;
 }
 
+std::string OptionParser::getWhitePlayer()
+{
+    return this->player1_;
+}
+
+std::string OptionParser::getBlackPlayer()
+{
+  return this->player2_;
+}
+
 void OptionParser::parsePlayer(std::string token)
 {
     token = token.substr(2);

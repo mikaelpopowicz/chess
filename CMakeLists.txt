@@ -9,7 +9,18 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -std=c++1y -pedantic")
 file (
   GLOB_RECURSE
   source_files
-  src/*
+  src/main.cc
+  src/parser/parserPGN.cc
+  src/parser/option-parser.cc
+  src/player/player.cc
+  src/player/player-pgn.cc
+  src/player/player-human.cc
+  src/chess-manager.cc
+  src/color.cc
+  src/move.cc
+  src/piece-type.cc
+  src/position.cc
+  src/player/player-abstract.cc
 )
 
 # Executable declaration
