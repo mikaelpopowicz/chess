@@ -17,7 +17,7 @@ void PlayerPGN::last_opponent_move_set(const Move& last_opponent_move)
 
 Move PlayerPGN::move_get()
 {
-  std::string = *iterator;
+  std::string raw_move = *iterator;
   iterator++;
 
   //Check if this is a rock
@@ -32,6 +32,8 @@ Move PlayerPGN::move_get()
       return big_rock();
     }
   }
+
+  
 
   /**
   * Parse the raw move to get the position and the piece type
@@ -56,13 +58,13 @@ Move PlayerPGN::little_rock()
   {
     Position begin(Position::EVA, Position::EINS);
     Position end(Position::GUSTAV, Position::EINS);
-    return move(begin, end, PieceType::KING);
+    return Move(begin, end, PieceType::NONE);
   }
   else
   {
     Position begin(Position::EVA, Position::ACHT);
     Position end(Position::GUSTAV, Position::ACHT);
-    return move(begin, end, PieceType::KING);
+    return Move(begin, end, PieceType::NONE);
   }
 }
 
@@ -72,13 +74,13 @@ Move PlayerPGN::big_rock()
   {
     Position begin(Position::EVA, Position::EINS);
     Position end(Position::CESAR, Position::EINS);
-    return move(begin, end, PieceType::KING);
+    return Move(begin, end, PieceType::NONE);
   }
   else
   {
     Position begin(Position::EVA, Position::ACHT);
     Position end(Position::CESAR, Position::ACHT);
-    return move(begin, end, PieceType::KING);
+    return Move(begin, end, PieceType::NONE);
   }
 }
 
