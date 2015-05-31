@@ -50,10 +50,16 @@ protected:
   */
   std::vector<Chessboard> history_;
 
-  bool check_move();
+  bool check_move(Move m);
   bool check_rules();
   void add_history(Chessboard cb);
   void clear_history();
+
+  bool check_pawn_move(Move m, Piece p);
+  bool check_rook_move(Move m);
+  bool check_knight_move(Move m);
+  bool check_bishop_move(Move m);
+  bool check_king_move(Move m, Piece p);
 };
 
 #endif /*! GAME_ENGINE_HH */

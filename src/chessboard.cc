@@ -6,9 +6,8 @@
 #include <vector>
 
 Chessboard::Chessboard()
-  : king_moved_(false),
-    left_rook_moved_(false),
-    right_rook_moved_(false)
+  : white_king_moved_(false),
+    black_king_moved_(false)
 {
   for (int row = 0; row < SIZE; ++row)
     for (int col = 0; col < SIZE; ++col)
@@ -76,76 +75,38 @@ bool Chessboard::make_move(Move m)
   // If the king is moved
   if (p.get_type() == KING)
   {
-    king_moved_ = true;
+    bool king_moved = (p.get_color() == WHITE && white_king_moved_)
+          || (p.get_color() == BLACK && black_king_moved_);
 
     // in case of a castling kingside
-    if (!king_moved_ && !right_rook_moved_
-        && m.end_get().file_get() == Position::GUSTAV)
+    if (!king_moved && m.end_get().file_get() == Position::GUSTAV)
     {
       // moving the rook
       board_[line_end][col_end - 1] = board_[line_end][7];
       board_[line_end][7] = Piece(NONE, BLACK);
-      right_rook_moved_ = true;
     }
 
     // in case of a castling queenside
-    else if (!king_moved_ && !left_rook_moved_
-             && m.end_get().file_get() == Position::CESAR)
+    else if (!king_moved && m.end_get().file_get() == Position::CESAR)
     {
       //moving the rook
       board_[line_end][col_end + 1] = board_[line_end][0];
       board_[line_end][0] = Piece(NONE, BLACK);
-      left_rook_moved_ = true;
     }
+
+    if (p.get_color() == WHITE)
+      white_king_moved_ = true;
+    else
+      black_king_moved_ = true;
   }
 
   return true;
 }
 
-std::vector<Position> Chessboard::possible_moves_from(Position pos)
+bool Chessboard::has_king_moved(Color c)
 {
-  Piece p = get_piece_pos(pos);
-  std::vector<Position> moves;
-
-  // Add simple moves
-  if (p.get_type() == PAWN)
-  {
-    int way = 1;
-    if (p.get_color() == BLACK)
-      way = -1;
-    moves.push_back(Position(pos.file_get(),
-                    static_cast<Position::Rank>(pos.rank_get() + way)));
-    // 2 cases if first move
-    if ((p.get_color() == WHITE && pos.rank_get() == Position::ZWEI)
-        || (p.get_color() == BLACK && pos.rank_get() == Position::SIEBEN))
-      moves.push_back(Position(pos.file_get(),
-                      static_cast<Position::Rank>(pos.rank_get() + way * 2)));
-  }
-  else if (p.get_type() == ROOK)
-  {
-    for (Position::Rank r = ++(pos.rank_get()); r < Position::RANK_LAST; ++r)
-    {
-      Piece tmp = get_piece(pos.file_get(), r);
-      if (tmp.get_type() != NONE && tmp.get_color() == p.get_color())
-        break;
-      moves.push_back(Position(pos.file_get(), r));
-      if (tmp.get_type() != NONE)
-        break;
-    }
-  }
-  else if (p.get_type() == KNIGHT)
-  {
-  }
-  else if (p.get_type() == BISHOP)
-  {
-  }
-  else if (p.get_type() == QUEEN)
-  {
-  }
-  else if (p.get_type() == KING)
-  {
-  }
-  // For each move, check if there's a piece of the same color on it
-
-  return moves;
+  if (c == WHITE)
+    return white_king_moved_;
+  else
+    return black_king_moved_;
 }

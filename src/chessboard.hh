@@ -17,13 +17,13 @@ public:
   Piece get_piece_pos(Position p);
   Piece get_piece(Position::File f, Position::Rank r);
   bool make_move(Move m);
-  std::vector<Position> possible_moves_from(Position pos);
+
+  bool has_king_moved(Color c);
 
 protected:
   Piece board_[SIZE][SIZE];
-  bool king_moved_;
-  bool left_rook_moved_;
-  bool right_rook_moved_;
+  bool white_king_moved_;
+  bool black_king_moved_;
 };
 
 #endif /*! CHESSBOARD_HH */
