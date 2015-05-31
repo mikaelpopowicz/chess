@@ -1,7 +1,7 @@
 #include "game-engine.hh"
 #include <cmath>
 
-  GameEngine::GameEngine(Player* p1, Player* p2)
+GameEngine::GameEngine(Player* p1, Player* p2)
 : p1_(p1),
   p2_(p2),
   nb_turn_no_move_(0)
@@ -14,25 +14,72 @@ GameEngine::~GameEngine()
 }
 
 /*void GameEngine::set_observer(Observer o)
-  {
-  }*/
+{
+}*/
 
 int GameEngine::play()
 {
-  //Begin the game
-  //Color color_turn = WHITE;
+  if (p1_ == NULL || p2_ == NULL)
+    return -1;
+
+  Color color_turn = p1_->color_get();
+  // While game not finished:
   while (is_finished() == 0)
   {
+    //Get a move from the current Player
+    if (color_turn == p1_->color_get())
+    {
+      actual_move_ = p1_->move_get();
+      p2_->last_opponent_move_set(actual_move_);
+    }
+    else
+    {
+      actual_move_ = p2_->move_get();
+      p1_->last_opponent_move_set(actual_move_);
+    }
+
+    //Check move & rules ok
+    if (check_move(actual_move_) == false)
+      return 2;
+
+    Position end = actual_move_.end_get();
+    //Check if piece taken
+    Piece piece = actual_.get_piece_pos(actual_move_.start_get());
+    Piece destination = actual_.get_piece_pos(end);
+    if (destination.get_type() != NONE)
+    {
+      //motify_on_piece_taken(destination.get_type(), end);
+      std::cout << "piece taken" << std::endl;
+    }
+    //Make move
+    int res = actual_.make_move(actual_move_);
+    if (res == 0 || res == 1)
+    {
+      //notify_on_piece_moved(piece.get_type(), end);
+    }
+    if (res == 2)
+    {
+      //notify_on_kingside_castling(color_turn)
+      //notify_on_piece_moved(KING, end)
+      //notify_on_piece_moved(ROOK, Position(end.file_get(),static_cast<Position::Rank>(end.rank_get() - 1)))
+    }
+    else if (res == 3)
+    {
+      //notify_on_queenside_castling(color_turn)
+      //notify_on_piece_moved(KING, end)
+      //notify_on_piece_moved(ROOK, Position(end.file_get(),static_cast<Position::Rank>(end.rank_get() + 1)))
+    }
+    else if (res == 1)
+    {
+      //notify_on_piece_promoted(actual_move_.promotion_get(), end);
+    }
+
+    if (color_turn == p1_->color_get())
+      color_turn = p2_->color_get();
+    else
+      color_turn = p1_->color_get();
+
   }
-
-  // While game not finished:
-
-  //Get a move from the Player 1
-  //Check move & rules ok
-  //Make move
-  //Get a move from the Player 2
-  //Check move & rules ok
-  //Make move
   return 0;
 }
 

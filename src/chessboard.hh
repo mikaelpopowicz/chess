@@ -16,7 +16,15 @@ public:
 
   Piece get_piece_pos(Position p);
   Piece get_piece(Position::File f, Position::Rank r);
-  bool make_move(Move m);
+  /*!
+  ** Make the move concerned.
+  ** @return 0 if nothing exceptional happened (& move done)
+  ** @return 1 if there is a promotion
+  ** @return 2 if there's a kingside castling
+  ** @return 3 if there's a queenside castling
+  ** @return -1 if no move
+  */
+  int make_move(Move m);
 
   bool has_king_moved(Color c);
 

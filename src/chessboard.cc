@@ -51,7 +51,7 @@ Piece Chessboard::get_piece(Position::File f, Position::Rank r)
   return board_[r - 1][f - 1];
 }
 
-bool Chessboard::make_move(Move m)
+int Chessboard::make_move(Move m)
 {
   Piece p = get_piece_pos(m.start_get());
   int line_start = m.start_get().rank_get() - 1;
@@ -60,15 +60,17 @@ bool Chessboard::make_move(Move m)
   int col_end = m.end_get().file_get() - 1;
 
   if (p.get_type() == NONE)
-    return false;
+    return -1;
 
   //Move the piece
   board_[line_start][col_start] = Piece(NONE, BLACK);
   board_[line_end][col_end] = p;
 
+  int res = 0;
   // If there is a promotion
   if (m.promotion_get() != NONE && p.get_type() == PAWN)
   {
+    res = 1;
     board_[line_end][col_end].set_type(m.promotion_get());
   }
 
@@ -84,6 +86,7 @@ bool Chessboard::make_move(Move m)
       // moving the rook
       board_[line_end][col_end - 1] = board_[line_end][7];
       board_[line_end][7] = Piece(NONE, BLACK);
+      res = 2;
     }
 
     // in case of a castling queenside
@@ -92,6 +95,7 @@ bool Chessboard::make_move(Move m)
       //moving the rook
       board_[line_end][col_end + 1] = board_[line_end][0];
       board_[line_end][0] = Piece(NONE, BLACK);
+      res = 3;
     }
 
     if (p.get_color() == WHITE)
@@ -100,7 +104,7 @@ bool Chessboard::make_move(Move m)
       black_king_moved_ = true;
   }
 
-  return true;
+  return res;
 }
 
 bool Chessboard::has_king_moved(Color c)
