@@ -18,3 +18,9 @@ void Player::last_opponent_move_set(const Move& last_opponent_move)
 {
   last_opponent_move_ = last_opponent_move;
 }
+
+/*
+void Player::print()
+{
+
+}*/
