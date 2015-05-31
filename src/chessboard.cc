@@ -7,7 +7,9 @@
 
 Chessboard::Chessboard()
   : white_king_moved_(false),
-    black_king_moved_(false)
+    black_king_moved_(false),
+    white_king_(Position(Position::EVA, Position::EINS),
+    black_king_(Position(Position::EVA, Position::ACHT)
 {
   for (int row = 0; row < SIZE; ++row)
     for (int col = 0; col < SIZE; ++col)
@@ -99,9 +101,15 @@ int Chessboard::make_move(Move m)
     }
 
     if (p.get_color() == WHITE)
+    {
       white_king_moved_ = true;
+      white_king_ = m.end_get();
+    }
     else
+    {
       black_king_moved_ = true;
+      black_king_ = m.end_get();
+    }
   }
 
   return res;
@@ -113,4 +121,12 @@ bool Chessboard::has_king_moved(Color c)
     return white_king_moved_;
   else
     return black_king_moved_;
+}
+
+Position Chessboard::get_king_pos(Color c)
+{
+  if (c == WHITE)
+    return white_king_;
+  else
+    return black_king_;
 }

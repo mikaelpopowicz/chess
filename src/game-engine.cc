@@ -24,7 +24,7 @@ int GameEngine::play()
 
   Color color_turn = p1_->color_get();
   // While game not finished:
-  while (is_finished() == 0)
+  while (is_finished(color_turn) == 0)
   {
     //Get a move from the current Player
     if (color_turn == p1_->color_get())
@@ -73,6 +73,8 @@ int GameEngine::play()
     {
       //notify_on_piece_promoted(actual_move_.promotion_get(), end);
     }
+
+    //Check if player check
 
     if (color_turn == p1_->color_get())
       color_turn = p2_->color_get();
@@ -224,7 +226,7 @@ bool GameEngine::check_bishop_move(Move m)
   return false;
 }
 
-bool GameEngine::check_king_move(Move m, Piece p)
+bool GameEngine::check_king_move(Move m, Color c)
 {
   Position::File f_start = m.start_get().file_get();
   Position::Rank r_start = m.start_get().rank_get();
@@ -233,29 +235,26 @@ bool GameEngine::check_king_move(Move m, Piece p)
 
   if (fabs(f_end - f_start) <= 1 && fabs(r_end - r_start) <= 1)
   {
-    std::cout << "toto" << std::endl;
     Position::File f = Position::ANNA;
     Position::Rank r = Position::EINS;
     while (r != Position::RANK_LAST)
     {
       Piece tmp = actual_.get_piece(f, r);
       if (tmp.get_type() != NONE && tmp.get_type() != KING
-          && tmp.get_color() != p.get_color()
+          && tmp.get_color() != c
           && check_move(Move(Position(f, r), Position(f_end, r_end))))
         return false;
       ++f;
       if (f == Position::FILE_LAST)
       {
-        std::cout << "new line" <<std::endl;
         f = Position::ANNA;
         ++r;
       }
     }
     return true;
   }
-  else if (!actual_.has_king_moved(p.get_color()))
+  else if (!actual_.has_king_moved(c))
   {
-    std::cout << "titi" <<std::endl;
     Position::File f_tmp = f_start;
     if (f_end > f_start)
       ++f_tmp;
@@ -272,7 +271,7 @@ bool GameEngine::check_king_move(Move m, Piece p)
       {
         Piece tmp = actual_.get_piece(f, r);
         if (tmp.get_type() != NONE && tmp.get_type() != KING
-            && tmp.get_color() != p.get_color()
+            && tmp.get_color() != c
             && check_move(Move(Position(f, r), Position(f_tmp, r_start))))
           return false;
       }
@@ -290,13 +289,10 @@ bool GameEngine::check_king_move(Move m, Piece p)
 bool GameEngine::check_move(Move m)
 {
   Piece p = actual_.get_piece_pos(m.start_get());
-
-  //  Position::File f_start = m.start_get().file_get();
-  //  Position::Rank r_start = m.start_get().rank_get();
   Position::File f_end = m.end_get().file_get();
   Position::Rank r_end = m.end_get().rank_get();
-
   Piece p_tmp = actual_.get_piece(f_end, r_end);
+
   if (p_tmp.get_type() != NONE && p_tmp.get_color() == p.get_color())
     return false;
 
@@ -316,7 +312,7 @@ bool GameEngine::check_move(Move m)
     return check_rook_move(m) || check_bishop_move(m);
 
   else if (p.get_type() == KING)
-    return check_king_move(m, p);
+    return check_king_move(m, p.get_color());
 
   std::cout << m.start_get() << m.end_get() << std::endl;
   return false;
@@ -338,9 +334,40 @@ void GameEngine::clear_history()
   history_.clear();
 }
 
-int GameEngine::is_finished()
+bool is_player_mat(Position pos_king)
 {
-  // Check is player mat ?
+  Position::File f = Position::ANNA;
+  Position::Rank r = Position::EINS;
+  while (r != RANK_LAST)
+  {
+    Move m(pos_king, Position(f, r));
+    // If the cell is empty & the king can go to this move, no mat
+    if (tmp.get_type() == NONE && check_king_move(m, c))
+      return false;
+    ++f;
+    if (f == Position::FILE_LAST)
+    {
+      f = Position::ANNA;
+      ++r;
+    }
+  }
+  return true;
+}
+
+int GameEngine::is_finished(Color c)
+{
+  // Check is player mat ? for each king (white&black), find his possible
+  // moves. if each move is controlled by a piece of another color, he's mat
+  Position pos_king = actual_.get_king_pos(c);
+  if (is_player_mat(pos_king))
+  {
+    //o.notify_on_player_mat...
+    //if c = white, c'est 2 qui a gagné : return 2;
+    if (c == WHITE)
+      return 2;
+    else
+      return 1;
+  }
 
   // is player pat ?
   // is draw ?

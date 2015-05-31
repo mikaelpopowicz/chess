@@ -16,8 +16,11 @@ file (
   src/player/player-pgn.cc
   src/player/player-human.cc
   src/chess-manager.cc
-  src/color.cc
+  src/chessboard.cc
+  #  src/color.cc
+  src/game-engine.cc
   src/move.cc
+  src/piece.cc
   src/piece-type.cc
   src/position.cc
   src/player/player-abstract.cc

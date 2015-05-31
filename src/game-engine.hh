@@ -59,7 +59,7 @@ protected:
   bool check_rook_move(Move m);
   bool check_knight_move(Move m);
   bool check_bishop_move(Move m);
-  bool check_king_move(Move m, Piece p);
+  bool check_king_move(Move m, Color c);
 };
 
 #endif /*! GAME_ENGINE_HH */

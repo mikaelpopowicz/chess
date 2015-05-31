@@ -27,11 +27,14 @@ public:
   int make_move(Move m);
 
   bool has_king_moved(Color c);
+  Position get_king_pos(Color c);
 
 protected:
   Piece board_[SIZE][SIZE];
   bool white_king_moved_;
   bool black_king_moved_;
+  Position white_king_;
+  Position black_king_;
 };
 
 #endif /*! CHESSBOARD_HH */
