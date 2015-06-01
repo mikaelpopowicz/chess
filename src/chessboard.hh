@@ -29,6 +29,8 @@ public:
   bool has_king_moved(Color c);
   Position get_king_pos(Color c);
 
+  inline bool operator==(const Chessboard& chessboard) const;
+
 protected:
   Piece board_[SIZE][SIZE];
   bool white_king_moved_;
@@ -36,5 +38,7 @@ protected:
   Position white_king_;
   Position black_king_;
 };
+
+# include "chessboard.hxx"
 
 #endif /*! CHESSBOARD_HH */

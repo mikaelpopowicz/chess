@@ -62,6 +62,8 @@ protected:
   bool check_bishop_move(Move m);
   bool check_king_move(Move m, Color c);
   bool is_player_mat(Position pos_king);
+  bool is_player_pat(Color c);
+  bool is_threefold_repetition();
 };
 
 #endif /*! GAME_ENGINE_HH */

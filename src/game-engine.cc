@@ -24,8 +24,9 @@ int GameEngine::play()
 
   Color color_turn = p1_->color_get();
   //TODO o;notify_on_game_started();
+  int status = 0;
   // While game not finished:
-  while (is_finished(color_turn) == 0)
+  while (status == 0)
   {
     //Get a move from the current Player
     if (color_turn == p1_->color_get())
@@ -54,14 +55,18 @@ int GameEngine::play()
     if (destination.get_type() != NONE)
     {
       //TODO notify_on_piece_taken(destination.get_type(), end);
-      std::cout << "piece taken" << std::endl;
+      clear_history();
     }
     //Make move
     int res = actual_.make_move(actual_move_);
+    ++nb_turn_no_move_;
+    add_history(actual_);
     previous_moved_ = actual_move_.end_get();
     if (res == 0 || res == 1)
     {
       //TODO notify_on_piece_moved(piece.get_type(), end);
+      if (piece.get_type() == PAWN || destination.get_type() != NONE)
+        nb_turn_no_move_ = 0;
     }
     if (res == 2)
     {
@@ -87,6 +92,12 @@ int GameEngine::play()
     else
       color_turn = p1_->color_get();
 
+    status = is_finished(color_turn);
+  }
+
+  if (status == 3)
+  {
+    //TODO o.notify_on_draw()
   }
 
   //TODO o.notify_on_game_finished()
@@ -403,7 +414,19 @@ bool GameEngine::is_player_pat(Color c)
       if (check_move(Move(p_piece, p_other)))
         return false;
   return true;
+}
 
+bool GameEngine::is_threefold_repetition()
+{
+  int repetition = 0;
+  for (Chessboard cb : history_)
+  {
+    if (cb == actual_)
+      ++repetition;
+    if (repetition >= 3)
+      return true;
+  }
+  return false;
 }
 
 int GameEngine::is_finished(Color c)
@@ -429,6 +452,9 @@ int GameEngine::is_finished(Color c)
   }
 
   // is draw ?
+  if (nb_turn_no_move_ >= 50 || is_threefold_repetition())
+    return 3;
+
   // is actual player timeout ?
   return 0;
 }
