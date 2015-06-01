@@ -28,7 +28,7 @@ std::vector<void *> ClassLoader::get_libraries()
   return this->libs_;
 }
 
-listener *ClassLoader::get_instance(void *classptr)
+Listener *ClassLoader::get_instance(void *classptr)
 {
   create* create_listener = (create*) dlsym(classptr, "create");
   const char* dlsym_error = dlerror();
