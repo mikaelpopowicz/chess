@@ -17,6 +17,8 @@ file (
   src/player/player-human.cc
   src/chess-manager.cc
   src/chessboard.cc
+  src/chessboard-adapter.cc
+  src/chessboard-interface.cc
   #  src/color.cc
   src/game-engine.cc
   src/move.cc
