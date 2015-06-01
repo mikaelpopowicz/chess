@@ -37,6 +37,7 @@ private:
   std::vector<std::string> moves_;
   std::vector<std::string>::iterator iterator;
   Chessboard board_;
+  bool eat;
 
   Move little_rock();
   Move big_rock();
@@ -44,6 +45,19 @@ private:
   PieceType get_piece_type(std::string raw_move, int index);
   Position get_old_position(PieceType type, std::pair<std::string, std::string> new_pos,
     std::string first_prev_emplacement, std::string second_prev_emplacement);
+
+  Position find_old_pawn(std::pair<std::string, std::string> new_pos,
+                         std::string f_prev, std::string s_prev);
+  Position find_old_bishop(std::pair<std::string, std::string> new_pos,
+                           std::string f_prev, std::string s_prev);
+  Position find_old_king(std::pair<std::string, std::string> new_pos,
+                         std::string f_prev, std::string s_prev);
+  Position find_old_queen(std::pair<std::string, std::string> new_pos,
+                          std::string f_prev, std::string s_prev);
+  Position find_old_knight(std::pair<std::string, std::string> new_pos,
+                           std::string f_prev, std::string s_prev);
+  Position find_old_rook(std::pair<std::string, std::string> new_pos,
+                         std::string f_prev, std::string s_prev);
 };
 
 #endif /* !PLAYER_PGN_HH_ */
