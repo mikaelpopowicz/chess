@@ -4,6 +4,7 @@
 # include <vector>
 # include <string>
 # include <dlfcn.h>
+# include "listener.hh"
 
 class ClassLoader
 {
@@ -13,6 +14,8 @@ public:
   
   bool load_libraries();
   std::vector<void *> get_libraries();
+  listener *get_instance(void *class);
+  
   
 private:
   std::vector<std::string> libstr_;
