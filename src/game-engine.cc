@@ -23,6 +23,7 @@ int GameEngine::play()
     return -1;
 
   Color color_turn = p1_->color_get();
+  //TODO o;notify_on_game_started();
   // While game not finished:
   while (is_finished(color_turn) == 0)
   {
@@ -40,7 +41,11 @@ int GameEngine::play()
 
     //Check move & rules ok
     if (check_move(actual_move_) == false)
+    {
+      //TODO o.notify_on_player_disqualified(color_turn)
+      //TODO o.notify_on_game_finished()
       return 2;
+    }
 
     Position end = actual_move_.end_get();
     //Check if piece taken
@@ -83,6 +88,8 @@ int GameEngine::play()
       color_turn = p1_->color_get();
 
   }
+
+  //TODO o.notify_on_game_finished()
   return 0;
 }
 
@@ -368,6 +375,37 @@ bool GameEngine::is_player_mat(Position pos_king)
   return true;
 }
 
+bool GameEngine::is_player_pat(Color c)
+{
+  std::vector<Position> pos_pieces;
+  std::vector<Position> others;
+
+  //First loop to find which pieces belongs to the player
+  Position::File f = Position::ANNA;
+  Position::Rank r = Position::EINS;
+  while (r != Position::RANK_LAST)
+  {
+    Piece p_tmp = actual_.get_piece(f, r);
+    if (p_tmp.get_type() != NONE && p_tmp.get_color() ==c)
+      pos_pieces.push_back(Position(f, r));
+    else
+      others.push_back(Position(f, r));
+    ++f;
+    if (f == Position::FILE_LAST)
+    {
+      f = Position::ANNA;
+      ++r;
+    }
+  }
+  // For each piece, it checks if it can go to the others positions
+  for (Position p_piece : pos_pieces)
+    for (Position p_other : others)
+      if (check_move(Move(p_piece, p_other)))
+        return false;
+  return true;
+
+}
+
 int GameEngine::is_finished(Color c)
 {
   // Check is player mat ? for each king (white&black), find his possible
@@ -375,7 +413,7 @@ int GameEngine::is_finished(Color c)
   Position pos_king = actual_.get_king_pos(c);
   if (is_player_mat(pos_king))
   {
-    //o.notify_on_player_mat...
+    //TODO o.notify_on_player_mat...
     //if c = white, c'est 2 qui a gagné : return 2;
     if (c == WHITE)
       return 2;
@@ -384,9 +422,13 @@ int GameEngine::is_finished(Color c)
   }
 
   // is player pat ?
+  if (is_player_pat(c))
+  {
+    //TODO o.notify_on_player_pat(c)
+    return 3;
+  }
 
   // is draw ?
-  // is actual player disqualified ?
   // is actual player timeout ?
   return 0;
 }
