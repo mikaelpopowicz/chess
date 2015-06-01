@@ -127,7 +127,7 @@ bool GameEngine::check_pawn_move(Move m, Piece p)
   {
     r_tmp = r_start;
     Position pos(f_end, r_start);
-    Piece tmp = actual_.get_piece_pos(pos);
+    Piece& tmp = actual_.get_piece(pos.file_get(), pos.rank_get());
 
     bool en_passant = previous_moved_ == pos && tmp.get_type() == PAWN
       && ((tmp.get_color() == WHITE && pos.rank_get() == Position::VIER)

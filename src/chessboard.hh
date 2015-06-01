@@ -6,7 +6,7 @@
 # include "position.hh"
 # include <vector>
 
-#define SIZE 8
+# define SIZE 8
 
 class Chessboard
 {
@@ -14,8 +14,9 @@ public:
   Chessboard();
   virtual ~Chessboard();
 
-  Piece get_piece_pos(Position p);
-  Piece get_piece(Position::File f, Position::Rank r);
+  Piece get_piece_pos(const Position& p) const;
+  Piece get_piece(Position::File f, Position::Rank r) const;
+  Piece& get_piece(Position::File f, Position::Rank r);
   /*!
   ** Make the move concerned.
   ** @return 0 if nothing exceptional happened (& move done)

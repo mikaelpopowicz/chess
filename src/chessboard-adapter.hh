@@ -12,7 +12,7 @@ public:
     (const Position& position) const;
 
 protected:
- Chessboard chessboard_;
+  Chessboard chessboard_;
 };
 
 #endif /*! CHESSBOARD_ADAPTER_HH */

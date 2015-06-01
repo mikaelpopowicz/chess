@@ -43,12 +43,17 @@ Chessboard::~Chessboard()
 {
 }
 
-Piece Chessboard::get_piece_pos(Position p)
+Piece Chessboard::get_piece_pos(const Position& p) const
 {
   return get_piece(p.file_get(), p.rank_get());
 }
 
-Piece Chessboard::get_piece(Position::File f, Position::Rank r)
+Piece Chessboard::get_piece(Position::File f, Position::Rank r) const
+{
+  return board_[r - 1][f - 1];
+}
+
+Piece& Chessboard::get_piece(Position::File f, Position::Rank r)
 {
   return board_[r - 1][f - 1];
 }
