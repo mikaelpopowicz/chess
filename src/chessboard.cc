@@ -7,7 +7,9 @@
 
 Chessboard::Chessboard()
   : white_king_moved_(false),
-    black_king_moved_(false)
+    black_king_moved_(false),
+    white_king_(Position(Position::EVA, Position::EINS)),
+    black_king_(Position(Position::EVA, Position::ACHT))
 {
   for (int row = 0; row < SIZE; ++row)
     for (int col = 0; col < SIZE; ++col)
@@ -41,17 +43,22 @@ Chessboard::~Chessboard()
 {
 }
 
-Piece Chessboard::get_piece_pos(Position p)
+Piece Chessboard::get_piece_pos(const Position& p) const
 {
   return get_piece(p.file_get(), p.rank_get());
 }
 
-Piece Chessboard::get_piece(Position::File f, Position::Rank r)
+Piece Chessboard::get_piece(Position::File f, Position::Rank r) const
 {
   return board_[r - 1][f - 1];
 }
 
-bool Chessboard::make_move(Move m)
+Piece& Chessboard::get_piece(Position::File f, Position::Rank r)
+{
+  return board_[r - 1][f - 1];
+}
+
+int Chessboard::make_move(Move m)
 {
   Piece p = get_piece_pos(m.start_get());
   int line_start = m.start_get().rank_get() - 1;
@@ -60,15 +67,17 @@ bool Chessboard::make_move(Move m)
   int col_end = m.end_get().file_get() - 1;
 
   if (p.get_type() == NONE)
-    return false;
+    return -1;
 
   //Move the piece
   board_[line_start][col_start] = Piece(NONE, BLACK);
   board_[line_end][col_end] = p;
 
+  int res = 0;
   // If there is a promotion
   if (m.promotion_get() != NONE && p.get_type() == PAWN)
   {
+    res = 1;
     board_[line_end][col_end].set_type(m.promotion_get());
   }
 
@@ -84,6 +93,7 @@ bool Chessboard::make_move(Move m)
       // moving the rook
       board_[line_end][col_end - 1] = board_[line_end][7];
       board_[line_end][7] = Piece(NONE, BLACK);
+      res = 2;
     }
 
     // in case of a castling queenside
@@ -92,15 +102,22 @@ bool Chessboard::make_move(Move m)
       //moving the rook
       board_[line_end][col_end + 1] = board_[line_end][0];
       board_[line_end][0] = Piece(NONE, BLACK);
+      res = 3;
     }
 
     if (p.get_color() == WHITE)
+    {
       white_king_moved_ = true;
+      white_king_ = m.end_get();
+    }
     else
+    {
       black_king_moved_ = true;
+      black_king_ = m.end_get();
+    }
   }
 
-  return true;
+  return res;
 }
 
 bool Chessboard::has_king_moved(Color c)
@@ -109,4 +126,12 @@ bool Chessboard::has_king_moved(Color c)
     return white_king_moved_;
   else
     return black_king_moved_;
+}
+
+Position Chessboard::get_king_pos(Color c)
+{
+  if (c == WHITE)
+    return white_king_;
+  else
+    return black_king_;
 }
