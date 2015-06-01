@@ -48,30 +48,31 @@ int GameEngine::play()
     Piece destination = actual_.get_piece_pos(end);
     if (destination.get_type() != NONE)
     {
-      //motify_on_piece_taken(destination.get_type(), end);
+      //TODO notify_on_piece_taken(destination.get_type(), end);
       std::cout << "piece taken" << std::endl;
     }
     //Make move
     int res = actual_.make_move(actual_move_);
+    previous_moved_ = actual_move_.end_get();
     if (res == 0 || res == 1)
     {
-      //notify_on_piece_moved(piece.get_type(), end);
+      //TODO notify_on_piece_moved(piece.get_type(), end);
     }
     if (res == 2)
     {
-      //notify_on_kingside_castling(color_turn)
-      //notify_on_piece_moved(KING, end)
-      //notify_on_piece_moved(ROOK, Position(end.file_get(),static_cast<Position::Rank>(end.rank_get() - 1)))
+      //TODO notify_on_kingside_castling(color_turn)
+      //TODO notify_on_piece_moved(KING, end)
+      //TODO notify_on_piece_moved(ROOK, Position(end.file_get(),static_cast<Position::Rank>(end.rank_get() - 1)))
     }
     else if (res == 3)
     {
-      //notify_on_queenside_castling(color_turn)
-      //notify_on_piece_moved(KING, end)
-      //notify_on_piece_moved(ROOK, Position(end.file_get(),static_cast<Position::Rank>(end.rank_get() + 1)))
+      //TODO notify_on_queenside_castling(color_turn)
+      //TODO notify_on_piece_moved(KING, end)
+      //TODO notify_on_piece_moved(ROOK, Position(end.file_get(),static_cast<Position::Rank>(end.rank_get() + 1)))
     }
     else if (res == 1)
     {
-      //notify_on_piece_promoted(actual_move_.promotion_get(), end);
+      //TODO notify_on_piece_promoted(actual_move_.promotion_get(), end);
     }
 
     //Check if player check
@@ -96,8 +97,9 @@ bool GameEngine::check_pawn_move(Move m, Piece p)
   bool is_whi = p.get_color() == WHITE;
   bool white_init = r_start == Position::ZWEI;
   bool black_init = r_start == Position::SIEBEN;
+  Piece p_end = actual_.get_piece(f_end, r_end);
   // If same column & one cell moved or 2 at the beginning :
-  if (same_col &&
+  if (same_col && p_end.get_type() == NONE &&
       ((is_whi && (r_end == ++r_tmp || (white_init && r_end == ++r_tmp)))
        || (!is_whi && (r_end == --r_tmp || (black_init && r_end == --r_tmp)))
       ))
@@ -105,16 +107,26 @@ bool GameEngine::check_pawn_move(Move m, Piece p)
   // else if "en passant"
   else if (!same_col)
   {
-    Piece p_end = actual_.get_piece(f_end, r_end);
-    //TODO make bool en passant
-    bool en_passant = false;
+    r_tmp = r_start;
+    Position pos(f_end, r_start);
+    Piece tmp = actual_.get_piece_pos(pos);
+
+    bool en_passant = previous_moved_ == pos && tmp.get_type() == PAWN
+      && ((tmp.get_color() == WHITE && pos.rank_get() == Position::VIER)
+          || (tmp.get_color() == BLACK && pos.rank_get() == Position::FUNF));
+
+    //If the pawn goes on an adjacent column
     if ((is_whi && r_end == ++r_tmp && fabs(r_start - r_end) == 1)
         || (!is_whi && r_end == --r_tmp && fabs(r_start - r_end) == 1))
     {
-      if ((p_end.get_color() != p.get_color() && p_end.get_type() != NONE)
-          || en_passant)
+      // If the goal of the pawn is an opponent piece
+      if ((p_end.get_color() != p.get_color() && p_end.get_type() != NONE))
+        return true;
+      // Else if the previous move was a pawn which moved 2 cells
+      else if (en_passant)
       {
-        //TODO delete pawn if there is a pawn with "en passant rules"
+        tmp.set_type(NONE);
+        //TODO o.notify_on_piece_token(tmp.get_type(), pos);
         return true;
       }
     }
@@ -334,15 +346,17 @@ void GameEngine::clear_history()
   history_.clear();
 }
 
-bool is_player_mat(Position pos_king)
+bool GameEngine::is_player_mat(Position pos_king)
 {
   Position::File f = Position::ANNA;
   Position::Rank r = Position::EINS;
-  while (r != RANK_LAST)
+  Piece king = actual_.get_piece_pos(pos_king);
+  while (r != Position::RANK_LAST)
   {
     Move m(pos_king, Position(f, r));
+    Piece tmp = actual_.get_piece(f, r);
     // If the cell is empty & the king can go to this move, no mat
-    if (tmp.get_type() == NONE && check_king_move(m, c))
+    if (tmp.get_type() == NONE && check_king_move(m, king.get_color()))
       return false;
     ++f;
     if (f == Position::FILE_LAST)
@@ -370,6 +384,7 @@ int GameEngine::is_finished(Color c)
   }
 
   // is player pat ?
+
   // is draw ?
   // is actual player disqualified ?
   // is actual player timeout ?

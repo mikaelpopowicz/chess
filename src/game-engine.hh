@@ -2,7 +2,7 @@
 # define GAME_ENGINE_HH
 
 # include <vector>
-# include "player.hh"
+# include "player/player.hh"
 # include "move.hh"
 //# include "observer.hh"
 # include "chessboard.hh"
@@ -27,12 +27,13 @@ public:
   ** @return 0 if the game is not finished, 1 if the player White won,
   ** @return 2 if the player black won, 3 if nobody won
   */
-  int is_finished();
+  int is_finished(Color c);
 
 protected:
   Player* p1_;
   Player* p2_;
   Move actual_move_;
+  Position previous_moved_;
   /*!
   ** Represents the number of moves since:
   **   - no piece has been taken &
@@ -60,6 +61,7 @@ protected:
   bool check_knight_move(Move m);
   bool check_bishop_move(Move m);
   bool check_king_move(Move m, Color c);
+  bool is_player_mat(Position pos_king);
 };
 
 #endif /*! GAME_ENGINE_HH */

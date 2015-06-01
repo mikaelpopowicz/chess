@@ -8,8 +8,8 @@
 Chessboard::Chessboard()
   : white_king_moved_(false),
     black_king_moved_(false),
-    white_king_(Position(Position::EVA, Position::EINS),
-    black_king_(Position(Position::EVA, Position::ACHT)
+    white_king_(Position(Position::EVA, Position::EINS)),
+    black_king_(Position(Position::EVA, Position::ACHT))
 {
   for (int row = 0; row < SIZE; ++row)
     for (int col = 0; col < SIZE; ++col)
