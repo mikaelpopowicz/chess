@@ -14,7 +14,7 @@ public:
   
   bool load_libraries();
   std::vector<void *> get_libraries();
-  listener *get_instance(void *class);
+  Listener *ClassLoader::get_instance(void *classptr);
   
   
 private:
