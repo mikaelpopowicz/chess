@@ -460,17 +460,33 @@ bool Chessboard::check_king_move(Move m, Color c, Position prev)
 
 void Chessboard::print()
 {
-  for (int row = 0; row < 8; ++row)
+  std::string red = "\033[1;31m";
+  std::string green = "\033[1;32m";
+  std::string normal = "\033[0m";
+  for (int row = 7; row >= 0; --row)
   {
     for (int col = 0; col < 8; ++col)
     {
       Piece p = board_[row][col];
-      std::cout << "[";
-      if (p.get_type() == NONE)
-        std::cout << " ; ";
+      if (p.get_color() == 0)
+        std::cout << "[" << green;
       else
-        std::cout << p.get_type() << ";" << p.get_color();
-      std::cout << "]";
+        std::cout << "[" << red;
+      if (p.get_type() == NONE)
+        std::cout << " ";
+      else if (p.get_type() == KING)
+        std::cout << "K";
+      else if (p.get_type() == QUEEN)
+        std::cout << "Q";
+      else if (p.get_type() == KNIGHT)
+        std::cout << "N";
+      else if (p.get_type() == ROOK)
+        std::cout << "R";
+      else if (p.get_type() == BISHOP)
+        std::cout << "B";
+      else
+        std::cout << "P";
+      std::cout << normal << "]";
     }
   std::cout << std::endl;
   }
