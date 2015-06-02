@@ -30,20 +30,23 @@ Move PlayerPGN::move_get()
     }
   }
 
+  Position pos_nul(Position::FILE_FIRST, Position::RANK_FIRST);
+
   int index = 0;
   std::string first_prev_emplacement;
   std::string second_prev_emplacement;
+  PieceType type = get_piece_type(raw_move, index);
   //Check if there is a indication on the previous emplacement of the piece
-  if (is_emplacement(raw_move.substr(index, 1)))
+  if (raw_move.size() - index > 2 && is_emplacement(raw_move.substr(index, 1)))
     first_prev_emplacement = raw_move[index++];
-  if (is_emplacement(raw_move.substr(index, 1)))
+  if (raw_move.size() - index > 2 && is_emplacement(raw_move.substr(index, 1)))
     second_prev_emplacement = raw_move[index++];
 
-  PieceType type = get_piece_type(raw_move, index++);
   std::cout << "PieceType == " << type << std::endl;
+  std::cout << "last opponent move:" << last_opponent_move_;
 
   if (type == PieceType::NONE)
-    return Move();
+    return Move(pos_nul, pos_nul);
 
   if (raw_move.substr(index, 1) == "x")
     {
@@ -51,11 +54,12 @@ Move PlayerPGN::move_get()
       eat = true;
     }
 
+
   Position end(fileMap_[raw_move.substr(index, 1)],
                rankMap_[raw_move.substr(index + 1, 1)]);
   if (end.file_get() == Position::FILE_FIRST ||
       end.rank_get() == Position::RANK_FIRST)
-    return Move();
+    return Move(pos_nul, pos_nul);
 
   Position::File f_start = fileMap_[first_prev_emplacement];
   Position::Rank r_start = rankMap_[second_prev_emplacement];
@@ -73,8 +77,7 @@ Move PlayerPGN::move_get()
   **/
 
 
-
-  return Move(begin, end, PieceType::NONE);
+  return Move(begin, end);
 }
 
 Position PlayerPGN::get_old_position(PieceType type,
@@ -82,127 +85,26 @@ Position PlayerPGN::get_old_position(PieceType type,
                                      Position::File f_start,
                                      Position::Rank r_start)
 {
-//  first_prev_emplacement = second_prev_emplacement;
-//  type = type;
-//  new_pos = new_pos;
-
-  switch(type)
-    {
-    case PieceType::PAWN:
-      return find_old_pawn(new_pos, f_start, r_start);
-      break;
-    case PieceType::BISHOP:
-      return find_old_bishop(new_pos, f_start, r_start);
-      break;
-    case PieceType::KING:
-      return find_old_king(new_pos, f_start, r_start);
-      break;
-    case PieceType::QUEEN:
-      return find_old_queen(new_pos, f_start, r_start);
-      break;
-    case PieceType::KNIGHT:
-      return find_old_knight(new_pos, f_start, r_start);
-      break;
-    case PieceType::ROOK:
-      return find_old_rook(new_pos, f_start, r_start);
-      break;
-    default:
-      break;
-    }
-  //if (type == PieceType::PAWN)
-  return Position();
-}
-
-Position PlayerPGN::find_old_pawn(Position new_pos,
-                                  Position::File f, Position::Rank r)
-{
-/*  Piece p;
-  Position::File file = fileMap_[std::get<0>new_pos];
-  Position::Rank rank = rankMap_[std::get<1>new_pos];
-  if (color_ == Color::WHITE)
-    {
-      for (int i = 0; i < 2; i++)
-        {
-          p = board_.get_piece_pos(file, --rank);
-          if (p.get_type == PieceType::PAWN && p.get_color == Color::WHITE)
-            return Position(file, rank);
-        }
-    }
-  else
-    {
-      for (int i = 0; i < 2; i++)
-        {
-          p = board.get_piece_pos(file, ++rank);
-          if (p.get_type == PieceType::PAWN && p.get_color == Color::BLACK)
-            return Position(file, rank);
-        }
-    }
-  return Position();*/
-
-  new_pos = new_pos;
-  f = f;
-  r = r;
-  return Position();
-}
-
-Position PlayerPGN::find_old_bishop(Position new_pos,
-                                    Position::File f, Position::Rank r)
-{
-  new_pos = new_pos;
-  f = f;
-  r = r;
-  return Position();
-}
-
-Position PlayerPGN::find_old_king(Position new_pos,
-                                  Position::File f, Position::Rank r)
-{
-  new_pos = new_pos;
-  f = f;
-  r = r;
-  return Position();
-}
-
-Position PlayerPGN::find_old_queen(Position new_pos,
-                                   Position::File f, Position::Rank r)
-{
-  new_pos = new_pos;
-  f = f;
-  r = r;
-  return Position();
-}
-
-Position PlayerPGN::find_old_knight(Position new_pos,
-                                    Position::File f, Position::Rank r)
-{
-  new_pos = new_pos;
-  f = f;
-  r = r;
-  return Position();
-}
-
-
-Position PlayerPGN::find_old_rook(Position new_pos,
-                                  Position::File f, Position::Rank r)
-{
-  Position::File f_tmp = f;
-  Position::Rank r_tmp = r;
+  Position::File f_tmp = f_start;
+  Position::Rank r_tmp = r_start;
   // if file or rank is null, we increment it at least to the first enum
-  if (f == Position::FILE_FIRST)
+  if (f_start == Position::FILE_FIRST)
     ++f_tmp;
-  if (r == Position::RANK_FIRST)
+  if (r_start == Position::RANK_FIRST)
     ++r_tmp;
 
   while (f_tmp != Position::FILE_LAST && r_tmp != Position::RANK_LAST)
   {
     Piece piece = board_.get_piece_pos(Position(f_tmp, r_tmp));
     Move m_tmp(Position(f_tmp, r_tmp), new_pos);
-    if (piece.get_type() == ROOK &&
+
+    // We check if the piece has the good type & move is possible
+    if (piece.get_type() == type &&
         board_.check_move(m_tmp, last_opponent_move_.end_get()))
       return Position(f_tmp, r_tmp);
 
     // INCREMENTATION PART
-    if (f == Position::FILE_FIRST)
+    if (f_start == Position::FILE_FIRST)
       ++f_tmp;
     else
       ++r_tmp;
@@ -210,7 +112,7 @@ Position PlayerPGN::find_old_rook(Position new_pos,
     if (f_tmp == Position::FILE_LAST)
     {
       // If rank is unknown : double loop
-      if (r == Position::RANK_FIRST)
+      if (r_start == Position::RANK_FIRST)
       {
         f_tmp = Position::ANNA;
         ++r_tmp;
@@ -222,10 +124,10 @@ Position PlayerPGN::find_old_rook(Position new_pos,
       }
     }
   }
-  return Position();
+  return Position(Position::FILE_FIRST, Position::RANK_FIRST);
 }
 
-PieceType PlayerPGN::get_piece_type(std::string raw_move, int index)
+PieceType PlayerPGN::get_piece_type(std::string raw_move, int& index)
 {
   //No piece specifide
   if (fileMap_[raw_move.substr(index, 1)] != Position::FILE_FIRST)
@@ -233,6 +135,7 @@ PieceType PlayerPGN::get_piece_type(std::string raw_move, int index)
   PieceType res = pieceMap_[raw_move.substr(index, 1)];
   if (res == PieceType::KING && raw_move.substr(index, 1) != "K")
     return PieceType::NONE;
+  ++index;
   return res;
 }
 

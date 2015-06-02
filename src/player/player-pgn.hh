@@ -42,11 +42,11 @@ private:
   Move little_rock();
   Move big_rock();
   bool is_emplacement(std::string c);
-  PieceType get_piece_type(std::string raw_move, int index);
+  PieceType get_piece_type(std::string raw_move, int& index);
   Position get_old_position(PieceType type, Position position,
       Position::File file_start, Position::Rank rank_start);
 
-  Position find_old_pawn(Position pos_end, Position::File file_start,
+/*  Position find_old_pawn(Position pos_end, Position::File file_start,
                          Position::Rank rank_start);
   Position find_old_bishop(Position pos_end, Position::File file_start,
                           Position::Rank rank_start);
@@ -57,7 +57,7 @@ private:
   Position find_old_knight(Position pos_end, Position::File file_start,
                           Position::Rank rank_start);
   Position find_old_rook(Position pos_end, Position::File file_start,
-                          Position::Rank rank_start);
+                          Position::Rank rank_start);*/
 };
 
 #endif /* !PLAYER_PGN_HH_ */
