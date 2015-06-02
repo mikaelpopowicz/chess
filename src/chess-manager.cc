@@ -1,5 +1,6 @@
 #include "chess-manager.hh"
 #include "parser/option-parser.hh"
+#include "game-engine.hh"
 
 ChessManager::ChessManager(int argc, char **argv)
   : argc_(argc),
@@ -32,20 +33,29 @@ int ChessManager::go()
         createPGNplayers(parserPGN);
       else
         return 2;
-      this->white_->print();
-      this->black_->print();
     }
     else
     {
       if (opt.getWhitePlayer() == "human")
       {
         this->white_ = new PlayerHuman(Color::WHITE);
-        std::cout << this->white_->move_get() << std::endl;
       }
 
       if (opt.getBlackPlayer() == "human")
         this->black_ = new PlayerHuman(Color::BLACK);
     }
+
+    this->white_->print();
+    this->black_->print();
+
+/*    for (int i = 0; i < 20; i++)
+    {
+      Move move = this->black_->move_get();
+      std::cout << move << std::endl;
+    }*/
+
+    GameEngine gm(white_, black_);
+    gm.play();
     return 0;
   }
   else
