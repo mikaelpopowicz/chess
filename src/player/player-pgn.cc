@@ -44,12 +44,6 @@ Move PlayerPGN::move_get()
   if (type == PieceType::NONE)
     return Move(pos_nul, pos_nul);
 
-  if (raw_move.substr(index, 1) == "x")
-    {
-      index++;
-      eat = true;
-    }
-
   if (rankMap_[raw_move.substr(raw_move.size() - 1)] == Position::RANK_FIRST)
   {
     if (raw_move[raw_move.size() - 1] != '+' &&
@@ -65,13 +59,18 @@ Move PlayerPGN::move_get()
   if (raw_move.size() - index > 2 && is_emplacement(raw_move.substr(index, 1)))
     second_prev_emplacement = raw_move[index++];
 
+  if (raw_move.substr(index, 1) == "x")
+    {
+      index++;
+      eat = true;
+    }
+
   std::cout << "PieceType == " << type << std::endl;
   std::cout << "last opponent move:" << last_opponent_move_ << std::endl;;
 
   Position end(fileMap_[raw_move.substr(index, 1)],
                rankMap_[raw_move.substr(index + 1, 1)]);
-  if (end.file_get() == Position::FILE_FIRST ||
-      end.rank_get() == Position::RANK_FIRST)
+  if (end.file_get() == Position::FILE_FIRST)
     return Move(pos_nul, pos_nul);
 
   Position::File f_start = fileMap_[first_prev_emplacement];
