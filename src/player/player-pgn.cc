@@ -51,17 +51,20 @@ Move PlayerPGN::move_get()
       eat = true;
     }
 
-  if (fileMap_[raw_move.substr(index, 1)] == Position::FILE_FIRST
-    || rankMap_[raw_move.substr(index + 1, 1)] == Position::RANK_FIRST)
+  Position end(fileMap_[raw_move.substr(index, 1)],
+               rankMap_[raw_move.substr(index + 1, 1)]);
+  if (end.file_get() == Position::FILE_FIRST ||
+      end.rank_get() == Position::RANK_FIRST)
     return Move();
 
-  std::pair<std::string, std::string> new_position(raw_move.substr(index, 1),
-                                                 raw_move.substr(index + 1, 1));
+  Position::File f_start = fileMap_[first_prev_emplacement];
+  Position::Rank r_start = rankMap_[second_prev_emplacement];
 
-  Position begin = get_old_position(type, new_position,
-                               first_prev_emplacement, second_prev_emplacement);
-  Position end(fileMap_[std::get<0>(new_position)],
-               rankMap_[std::get<1>(new_position)]);
+  Position begin;
+  if (f_start != Position::FILE_FIRST && r_start != Position::RANK_FIRST)
+    begin = Position(f_start, r_start);
+  else
+    begin = get_old_position(type, end, f_start, r_start);
   /**
   * Parse the raw move to get the position and the piece type
   * check all the possibility where the piece could come from
@@ -75,39 +78,33 @@ Move PlayerPGN::move_get()
 }
 
 Position PlayerPGN::get_old_position(PieceType type,
-                                     std::pair<std::string, std::string> new_pos,
-                                     std::string first_prev_emplacement,
-                                     std::string second_prev_emplacement)
+                                     Position new_pos,
+                                     Position::File f_start,
+                                     Position::Rank r_start)
 {
-  first_prev_emplacement = second_prev_emplacement;
-  type = type;
-  new_pos = new_pos;
+//  first_prev_emplacement = second_prev_emplacement;
+//  type = type;
+//  new_pos = new_pos;
 
   switch(type)
     {
     case PieceType::PAWN:
-      return find_old_pawn(new_pos, first_prev_emplacement,
-                           second_prev_emplacement);
+      return find_old_pawn(new_pos, f_start, r_start);
       break;
     case PieceType::BISHOP:
-      return find_old_bishop(new_pos, first_prev_emplacement,
-                             second_prev_emplacement);
+      return find_old_bishop(new_pos, f_start, r_start);
       break;
     case PieceType::KING:
-      return find_old_king(new_pos, first_prev_emplacement,
-                           second_prev_emplacement);
+      return find_old_king(new_pos, f_start, r_start);
       break;
     case PieceType::QUEEN:
-      return find_old_queen(new_pos, first_prev_emplacement,
-                            second_prev_emplacement);
+      return find_old_queen(new_pos, f_start, r_start);
       break;
     case PieceType::KNIGHT:
-      return find_old_knight(new_pos, first_prev_emplacement,
-                             second_prev_emplacement);
+      return find_old_knight(new_pos, f_start, r_start);
       break;
     case PieceType::ROOK:
-      return find_old_rook(new_pos, first_prev_emplacement,
-                           second_prev_emplacement);
+      return find_old_rook(new_pos, f_start, r_start);
       break;
     default:
       break;
@@ -116,10 +113,10 @@ Position PlayerPGN::get_old_position(PieceType type,
   return Position();
 }
 
-Position PlayerPGN::find_old_pawn(std::pair<std::string, std::string> new_pos,
-                                  std::string f_prev, std::string s_prev)
+Position PlayerPGN::find_old_pawn(Position new_pos,
+                                  Position::File f, Position::Rank r)
 {
-  Piece p;
+/*  Piece p;
   Position::File file = fileMap_[std::get<0>new_pos];
   Position::Rank rank = rankMap_[std::get<1>new_pos];
   if (color_ == Color::WHITE)
@@ -140,46 +137,57 @@ Position PlayerPGN::find_old_pawn(std::pair<std::string, std::string> new_pos,
             return Position(file, rank);
         }
     }
+  return Position();*/
+
+  new_pos = new_pos;
+  f = f;
+  r = r;;
   return Position();
 }
 
-Position PlayerPGN::find_old_bishop(std::pair<std::string, std::string> new_pos,
-                                    std::string f_prev, std::string s_prev)
+Position PlayerPGN::find_old_bishop(Position new_pos,
+                                    Position::File f, Position::Rank r)
 {
   new_pos = new_pos;
-  f_prev = s_prev;
+  f = f;
+  r = r;;
   return Position();
 }
 
-Position PlayerPGN::find_old_king(std::pair<std::string, std::string> new_pos,
-                                  std::string f_prev, std::string s_prev)
+Position PlayerPGN::find_old_king(Position new_pos,
+                                  Position::File f, Position::Rank r)
 {
   new_pos = new_pos;
-  f_prev = s_prev;
-  return Position();
-}
-1
-Position PlayerPGN::find_old_queen(std::pair<std::string, std::string> new_pos,
-                                   std::string f_prev, std::string s_prev)
-{
-  new_pos = new_pos;
-  f_prev = s_prev;
+  f = f;
+  r = r;;
   return Position();
 }
 
-Position PlayerPGN::find_old_knight(std::pair<std::string, std::string> new_pos,
-                                    std::string f_prev, std::string s_prev)
+Position PlayerPGN::find_old_queen(Position new_pos,
+                                   Position::File f, Position::Rank r)
 {
   new_pos = new_pos;
-  f_prev = s_prev;
+  f = f;
+  r = r;;
   return Position();
 }
 
-Position PlayerPGN::find_old_rook(std::pair<std::string, std::string> new_pos,
-                                  std::string f_prev, std::string s_prev)
+Position PlayerPGN::find_old_knight(Position new_pos,
+                                    Position::File f, Position::Rank r)
 {
   new_pos = new_pos;
-  f_prev = s_prev;
+  f = f;
+  r = r;;
+  return Position();
+}
+
+
+Position PlayerPGN::find_old_rook(Position new_pos,
+                                  Position::File f, Position::Rank r)
+{
+  new_pos = new_pos;
+  f = f;
+  r = r;;
   return Position();
 }
 
