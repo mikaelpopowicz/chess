@@ -41,19 +41,6 @@ Move PlayerPGN::move_get()
   std::string second_prev_emplacement;
   PieceType type = get_piece_type(raw_move, index);
 
-  if (rankMap_[raw_move.substr(raw_move.size() - 1)] == Position::RANK_FIRST)
-  {
-    raw_move = raw_move.substr(0, raw_move.size() - 1);
-  }
-  //Check if there is a indication on the previous emplacement of the piece
-  if (raw_move.size() - index > 2 && is_emplacement(raw_move.substr(index, 1)))
-    first_prev_emplacement = raw_move[index++];
-  if (raw_move.size() - index > 2 && is_emplacement(raw_move.substr(index, 1)))
-    second_prev_emplacement = raw_move[index++];
-
-  std::cout << "PieceType == " << type << std::endl;
-  std::cout << "last opponent move:" << last_opponent_move_;
-
   if (type == PieceType::NONE)
     return Move(pos_nul, pos_nul);
 
@@ -62,6 +49,24 @@ Move PlayerPGN::move_get()
       index++;
       eat = true;
     }
+
+  if (rankMap_[raw_move.substr(raw_move.size() - 1)] == Position::RANK_FIRST)
+  {
+    if (raw_move[raw_move.size() - 1] != '+' &&
+        raw_move[raw_move.size() - 1] != '#')
+      return Move(pos_nul, pos_nul);
+    else
+      raw_move = raw_move.substr(0, raw_move.size() - 1);
+  }
+
+   //Check if there is a indication on the previous emplacement of the piece
+  if (raw_move.size() - index > 2 && is_emplacement(raw_move.substr(index, 1)))
+    first_prev_emplacement = raw_move[index++];
+  if (raw_move.size() - index > 2 && is_emplacement(raw_move.substr(index, 1)))
+    second_prev_emplacement = raw_move[index++];
+
+  std::cout << "PieceType == " << type << std::endl;
+  std::cout << "last opponent move:" << last_opponent_move_ << std::endl;;
 
   Position end(fileMap_[raw_move.substr(index, 1)],
                rankMap_[raw_move.substr(index + 1, 1)]);
@@ -77,12 +82,6 @@ Move PlayerPGN::move_get()
     begin = Position(f_start, r_start);
   else
     begin = get_old_position(type, end, f_start, r_start);
-  /**
-  * Parse the raw move to get the position and the piece type
-  * check all the possibility where the piece could come from
-  * if there is one piece, this is the right one
-  * else, return move()
-  **/
 
   Move m(begin, end);
   board_.make_move(m);
@@ -139,7 +138,8 @@ Position PlayerPGN::get_old_position(PieceType type,
 PieceType PlayerPGN::get_piece_type(std::string raw_move, int& index)
 {
   //No piece specifide
-  if (fileMap_[raw_move.substr(index, 1)] != Position::FILE_FIRST)
+  if (fileMap_[raw_move.substr(index, 1)] != Position::FILE_FIRST &&
+      fileMap_[raw_move.substr(index, 1)] != Position::FILE_LAST)
     return PieceType::PAWN;
   PieceType res = pieceMap_[raw_move.substr(index, 1)];
   if (res == PieceType::KING && raw_move.substr(index, 1) != "K")
