@@ -4,6 +4,7 @@
 GameEngine::GameEngine(Player* p1, Player* p2)
 : p1_(p1),
   p2_(p2),
+  previous_moved_(Position(Position::FILE_FIRST, Position::RANK_FIRST)),
   nb_turn_no_move_(0)
 {
   history_.push_back(actual_);
@@ -11,6 +12,8 @@ GameEngine::GameEngine(Player* p1, Player* p2)
 
 GameEngine::~GameEngine()
 {
+  delete p1_;
+  delete p2_;
 }
 
 /*void GameEngine::set_observer(Observer o)

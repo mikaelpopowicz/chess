@@ -5,6 +5,10 @@ PlayerPGN::PlayerPGN(Color color, std::vector<std::string> moves)
   , moves_(moves)
 {
   iterator = moves_.begin();
+  last_opponent_move_ = Move(Position(Position::FILE_FIRST,
+                                      Position::RANK_FIRST),
+                            (Position(Position::FILE_FIRST,
+                                      Position::RANK_FIRST)));
 }
 
 PlayerPGN::~PlayerPGN()
@@ -36,6 +40,11 @@ Move PlayerPGN::move_get()
   std::string first_prev_emplacement;
   std::string second_prev_emplacement;
   PieceType type = get_piece_type(raw_move, index);
+
+  if (rankMap_[raw_move.substr(raw_move.size() - 1)] == Position::RANK_FIRST)
+  {
+    raw_move = raw_move.substr(0, raw_move.size() - 1);
+  }
   //Check if there is a indication on the previous emplacement of the piece
   if (raw_move.size() - index > 2 && is_emplacement(raw_move.substr(index, 1)))
     first_prev_emplacement = raw_move[index++];
@@ -53,7 +62,6 @@ Move PlayerPGN::move_get()
       index++;
       eat = true;
     }
-
 
   Position end(fileMap_[raw_move.substr(index, 1)],
                rankMap_[raw_move.substr(index + 1, 1)]);
@@ -76,8 +84,9 @@ Move PlayerPGN::move_get()
   * else, return move()
   **/
 
-
-  return Move(begin, end);
+  Move m(begin, end);
+  board_.make_move(m);
+  return m;
 }
 
 Position PlayerPGN::get_old_position(PieceType type,
@@ -99,7 +108,7 @@ Position PlayerPGN::get_old_position(PieceType type,
     Move m_tmp(Position(f_tmp, r_tmp), new_pos);
 
     // We check if the piece has the good type & move is possible
-    if (piece.get_type() == type &&
+    if (piece.get_type() == type && piece.get_color() == color_ &&
         board_.check_move(m_tmp, last_opponent_move_.end_get()))
       return Position(f_tmp, r_tmp);
 

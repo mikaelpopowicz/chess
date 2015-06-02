@@ -67,7 +67,8 @@ int Chessboard::make_move(Move m)
   int line_end = m.end_get().rank_get() - 1;
   int col_end = m.end_get().file_get() - 1;
 
-  if (p.get_type() == NONE)
+  if (p.get_type() == NONE || line_start == -1 || col_start == -1 ||
+      line_end == -1 || col_end == -1)
     return -1;
 
   //Move the piece
@@ -147,7 +148,9 @@ bool Chessboard::is_player_mat(Position pos_king, Position prev)
     Move m(pos_king, Position(f, r));
     Piece tmp = get_piece(f, r);
     // If the cell is empty & the king can go to this move, no mat
-    if (tmp.get_type() == NONE && check_king_move(m, king.get_color(), prev))
+    if ((tmp.get_type() == NONE && check_king_move(m, king.get_color(), prev))
+        ||
+        (tmp.get_type() != NONE && tmp.get_color() == king.get_color()))
       return false;
     ++f;
     if (f == Position::FILE_LAST)
@@ -257,6 +260,7 @@ bool Chessboard::check_pawn_move(Move m, Piece p, Position previous_moved)
     r_tmp = r_start;
     Position pos(f_end, r_start);
     Piece& tmp = get_piece(pos.file_get(), pos.rank_get());
+
     bool en_passant = previous_moved == pos && tmp.get_type() == PAWN
       && ((tmp.get_color() == WHITE && pos.rank_get() == Position::VIER)
           || (tmp.get_color() == BLACK && pos.rank_get() == Position::FUNF));
@@ -411,6 +415,8 @@ bool Chessboard::check_king_move(Move m, Color c, Position prev)
     }
     return true;
   }
+  else if (fabs(f_end - f_start) + fabs(r_end - r_start) > 2)
+    return false;
   else if (!has_king_moved(c))
   {
     Position::File f_tmp = f_start;
@@ -421,10 +427,12 @@ bool Chessboard::check_king_move(Move m, Color c, Position prev)
     while (f_tmp != f_end)
     {
       Piece p_tmp = get_piece(f_tmp, r_start);
+      // If we find a piece on the way:
       if (p_tmp.get_type() != NONE)
         return false;
       Position::File f = Position::ANNA;
       Position::Rank r = Position::EINS;
+      // If this position is threatened
       while (r != Position::RANK_LAST)
       {
         Piece tmp = get_piece(f, r);
@@ -433,14 +441,38 @@ bool Chessboard::check_king_move(Move m, Color c, Position prev)
             && check_move(Move(Position(f, r),
                                Position(f_tmp, r_start)), prev))
           return false;
+        ++f;
+        if (f == Position::FILE_LAST)
+        {
+          f = Position::ANNA;
+          ++r;
+        }
       }
-      ++f;
-      if (f == Position::FILE_LAST)
-      {
-        f = Position::ANNA;
-        ++r;
-      }
+      if (f_end > f_start)
+        ++f_tmp;
+      else
+        --f_tmp;
     }
+    return true;
   }
   return false;
+}
+
+void Chessboard::print()
+{
+  for (int row = 0; row < 8; ++row)
+  {
+    for (int col = 0; col < 8; ++col)
+    {
+      Piece p = board_[row][col];
+      std::cout << "[";
+      if (p.get_type() == NONE)
+        std::cout << " ; ";
+      else
+        std::cout << p.get_type() << ";" << p.get_color();
+      std::cout << "]";
+    }
+  std::cout << std::endl;
+  }
+  std::cout << std::endl;
 }

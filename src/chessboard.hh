@@ -35,6 +35,8 @@ public:
   bool is_player_pat(Color c, Position previous_moved);
   bool is_threefold_repetition(std::vector<Chessboard> history);
 
+  void print();
+
   inline bool operator==(const Chessboard& chessboard) const;
 
 protected:
