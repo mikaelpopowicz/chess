@@ -465,6 +465,7 @@ void Chessboard::print()
   std::string normal = "\033[0m";
   for (int row = 7; row >= 0; --row)
   {
+    std::cout << " " << row + 1 << " ";
     for (int col = 0; col < 8; ++col)
     {
       Piece p = board_[row][col];
@@ -490,5 +491,7 @@ void Chessboard::print()
     }
   std::cout << std::endl;
   }
+  std::cout << "    a  b  c  d  e  f  g  h"
+            << std::endl;
   std::cout << std::endl;
 }
