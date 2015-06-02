@@ -1,41 +1,57 @@
 #include "class-loader.hh"
 
-ClassLoader::ClassLoader(std::vector<std::string> libstr)
-  : libstr_(libstr)
+ClassLoader::ClassLoader()
 {}
 
 ClassLoader::~ClassLoader()
 {}
 
-bool ClassLoader::load_libraries()
+bool ClassLoader::load_libraries(std::vector<std::string> libs)
 {
-  for (std::string str : this->libstr_)
+  for (auto str : libs)
   {
-    void *handle = dlopen(str, RTLD_LAZY);
-    if (!handle)
+    void* lib = dlopen(str.c_str(), RTLD_NOW);
+    if (!lib)
     {
-      std::cerr << "Unable to load : " << str << std::endl;
+      std::cerr << "Can't load lib " << str << ": " << dlerror() << std::endl;
       return false;
     }
-    this->libs_.push_back(handle);
-    handle = NULL;
+    ListenerExport* plugin = (ListenerExport*) dlsym(lib, "listener_plugin");
+    if (!plugin)
+    {
+      std::cerr << "Can't load symbol : " << dlerror() << std::endl;
+      return false;
+    }
+    this->libs_.push_back(lib);
+    this->plugins_.push_back(plugin);
   }
   return true;
 }
 
-std::vector<void *> ClassLoader::get_libraries()
+std::vector<void*> ClassLoader::get_libs()
 {
   return this->libs_;
 }
 
-Listener *ClassLoader::get_instance(void *classptr)
+std::vector<ListenerExport*> ClassLoader::get_plugins()
 {
-  create* create_listener = (create*) dlsym(classptr, "create");
+  return this->plugins_;
+}
+/*
+Listener* ClassLoader::get_instance(void* classptr)
+{
+  ListenerExport* test = static_cast<ListenerExport*>(dlsym(classptr, "listener_plugin"));
+  if (!test)
+    std::cerr << "Merde !" << std::endl;
+  //std::cout << "ListenerExport created ! -> " << test->name << std::endl;
   const char* dlsym_error = dlerror();
   if (dlsym_error)
   {
-    cerr << "Can not create instance" << std::endl;
+    std::cerr << "Can not create instance" << std::endl;
     return NULL;
   }
-  return create_listener();
+  std::cout << "Return a Listener !" << std::endl;
+  Listener* toto = test->create();
+  return toto;
 }
+*/

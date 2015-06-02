@@ -2,6 +2,7 @@
 # define CLASS_LOADER_HH_
 
 # include <vector>
+# include <iostream>
 # include <string>
 # include <dlfcn.h>
 # include "listener.hh"
@@ -9,17 +10,17 @@
 class ClassLoader
 {
 public:
-  ClassLoader(std::vector<string> libs);
+  ClassLoader();
   ~ClassLoader();
-  
-  bool load_libraries();
-  std::vector<void *> get_libraries();
-  Listener *ClassLoader::get_instance(void *classptr);
-  
-  
+
+  bool load_libraries(std::vector<std::string> libs);
+  std::vector<void*> get_libs();
+  std::vector<ListenerExport*> get_plugins();
+
+
 private:
-  std::vector<std::string> libstr_;
-  std::vector<void *> libs_;
+  std::vector<ListenerExport*> plugins_;
+  std::vector<void*> libs_;
 };
 
 #endif /* !CLASS_LOADER_HH_ */

@@ -20,9 +20,6 @@ public:
   ** @return the group leader
   */
   virtual const std::string& name_get() const = 0;
-
-protected:
-  Color color_;
 };
 
 # include "ai.hxx"
