@@ -31,6 +31,7 @@ int GameEngine::play()
   // While game not finished:
   while (status == 0)
   {
+    actual_.print();
     //Get a move from the current Player
     if (color_turn == p1_->color_get())
     {

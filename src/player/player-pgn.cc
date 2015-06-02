@@ -16,7 +16,6 @@ PlayerPGN::~PlayerPGN()
 
 Move PlayerPGN::move_get()
 {
-  eat = false;
   std::string raw_move = *iterator;
   iterator++;
   std::cout << "raw_move == " << raw_move << std::endl;
@@ -60,21 +59,31 @@ Move PlayerPGN::move_get()
     second_prev_emplacement = raw_move[index++];
 
   if (raw_move.substr(index, 1) == "x")
-    {
-      index++;
-      eat = true;
-    }
+    index++;
 
   std::cout << "PieceType == " << type << std::endl;
   std::cout << "last opponent move:" << last_opponent_move_ << std::endl;;
 
   Position end(fileMap_[raw_move.substr(index, 1)],
                rankMap_[raw_move.substr(index + 1, 1)]);
-  if (end.file_get() == Position::FILE_FIRST)
+  if (end.file_get() == Position::FILE_FIRST ||
+      end.rank_get() == Position::RANK_FIRST)
+    return Move(pos_nul, pos_nul);
+
+  int f_f = fileMap_[first_prev_emplacement];
+  int f_r = rankMap_[first_prev_emplacement];
+  int s_f = fileMap_[second_prev_emplacement];
+  int s_r = rankMap_[second_prev_emplacement];
+
+  if ((f_r != 0 && s_f != 0) || (f_f != 0 && s_f != 0) ||
+      (f_r != 0 && s_r != 0))
     return Move(pos_nul, pos_nul);
 
   Position::File f_start = fileMap_[first_prev_emplacement];
   Position::Rank r_start = rankMap_[second_prev_emplacement];
+
+  if (f_r != 0)
+    r_start = rankMap_[first_prev_emplacement];
 
   Position begin;
   if (f_start != Position::FILE_FIRST && r_start != Position::RANK_FIRST)
