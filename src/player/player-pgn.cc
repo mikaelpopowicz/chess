@@ -141,7 +141,7 @@ Position PlayerPGN::find_old_pawn(Position new_pos,
 
   new_pos = new_pos;
   f = f;
-  r = r;;
+  r = r;
   return Position();
 }
 
@@ -150,7 +150,7 @@ Position PlayerPGN::find_old_bishop(Position new_pos,
 {
   new_pos = new_pos;
   f = f;
-  r = r;;
+  r = r;
   return Position();
 }
 
@@ -159,7 +159,7 @@ Position PlayerPGN::find_old_king(Position new_pos,
 {
   new_pos = new_pos;
   f = f;
-  r = r;;
+  r = r;
   return Position();
 }
 
@@ -168,7 +168,7 @@ Position PlayerPGN::find_old_queen(Position new_pos,
 {
   new_pos = new_pos;
   f = f;
-  r = r;;
+  r = r;
   return Position();
 }
 
@@ -177,7 +177,7 @@ Position PlayerPGN::find_old_knight(Position new_pos,
 {
   new_pos = new_pos;
   f = f;
-  r = r;;
+  r = r;
   return Position();
 }
 
@@ -185,9 +185,43 @@ Position PlayerPGN::find_old_knight(Position new_pos,
 Position PlayerPGN::find_old_rook(Position new_pos,
                                   Position::File f, Position::Rank r)
 {
-  new_pos = new_pos;
-  f = f;
-  r = r;;
+  Position::File f_tmp = f;
+  Position::Rank r_tmp = r;
+  // if file or rank is null, we increment it at least to the first enum
+  if (f == Position::FILE_FIRST)
+    ++f_tmp;
+  if (r == Position::RANK_FIRST)
+    ++r_tmp;
+
+  while (f_tmp != Position::FILE_LAST && r_tmp != Position::RANK_LAST)
+  {
+    Piece piece = board_.get_piece_pos(Position(f_tmp, r_tmp));
+    Move m_tmp(Position(f_tmp, r_tmp), new_pos);
+    if (piece.get_type() == ROOK &&
+        board_.check_move(m_tmp, last_opponent_move_.end_get()))
+      return Position(f_tmp, r_tmp);
+
+    // INCREMENTATION PART
+    if (f == Position::FILE_FIRST)
+      ++f_tmp;
+    else
+      ++r_tmp;
+    // If we are at the end of the line
+    if (f_tmp == Position::FILE_LAST)
+    {
+      // If rank is unknown : double loop
+      if (r == Position::RANK_FIRST)
+      {
+        f_tmp = Position::ANNA;
+        ++r_tmp;
+      }
+      else
+      {
+        //end of loop on file
+        break;
+      }
+    }
+  }
   return Position();
 }
 
