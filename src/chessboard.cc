@@ -138,25 +138,92 @@ Position Chessboard::get_king_pos(Color c)
     return black_king_;
 }
 
-bool Chessboard::is_player_mat(Position pos_king, Position prev)
+bool Chessboard::is_player_check(Position pos_king, Position prev)
 {
   Position::File f = Position::ANNA;
   Position::Rank r = Position::EINS;
   Piece king = get_piece_pos(pos_king);
   while (r != Position::RANK_LAST)
   {
-    Move m(pos_king, Position(f, r));
+    Position pos_now(f, r);
     Piece tmp = get_piece(f, r);
-    // If the cell is empty & the king can go to this move, no mat
-    if ((tmp.get_type() == NONE && check_king_move(m, king.get_color(), prev))
-        ||
-        (tmp.get_type() != NONE && tmp.get_color() == king.get_color()))
-      return false;
+    if (tmp.get_type() != NONE && tmp.get_color() != king.get_color() &&
+        check_move(Move(pos_now, pos_king), prev))
+      return true;
+
     ++f;
     if (f == Position::FILE_LAST)
     {
       f = Position::ANNA;
       ++r;
+    }
+  }
+  return false;
+}
+
+bool Chessboard::is_player_mat(Position pos_king, Position prev)
+{
+  if (!is_player_check(pos_king, prev))
+    return false;
+  Piece king = get_piece_pos(pos_king);
+
+  std::vector<Position> pieces_pos;
+  Position::File f = Position::ANNA;
+  Position::Rank r = Position::EINS;
+  while (r != Position::RANK_LAST)
+  {
+    Piece p = get_piece(f, r);
+    if (p.get_type() != NONE &&
+        p.get_color() == king.get_color())
+      pieces_pos.push_back(Position(f, r));
+    ++f;
+    if (f == Position::FILE_LAST)
+    {
+      f = Position::ANNA;
+      ++r;
+    }
+  }
+
+  for (unsigned int i = 0; i < pieces_pos.size(); ++i)
+  {
+    f = Position::ANNA;
+    r = Position::EINS;
+    while (r != Position::RANK_LAST)
+    {
+      PieceType piece_pt = get_piece_pos(pieces_pos[i]).get_type();
+
+      Position pos_tmp(f, r);
+      Move m(pieces_pos[i], pos_tmp);
+      Move undo(pos_tmp, pieces_pos[i]);
+      Piece& tmp = get_piece(f, r);
+      PieceType pt = tmp.get_type();
+      Color c = tmp.get_color();
+
+      if (check_move(m, prev))
+      {
+        make_move(m);
+        bool is_check = is_player_check(pos_king, prev);
+        if (piece_pt == KING)
+          is_check = is_player_check(pos_tmp, prev);
+        if (!is_check)
+        {
+          make_move(undo);
+          tmp.set_type(pt);
+          tmp.set_color(c);
+          print();
+          return false;
+        }
+        make_move(undo);
+        tmp.set_type(pt);
+        tmp.set_color(c);
+      }
+
+      ++f;
+      if (f == Position::FILE_LAST)
+      {
+        f = Position::ANNA;
+        ++r;
+      }
     }
   }
   return true;
@@ -207,6 +274,7 @@ bool Chessboard::is_threefold_repetition(std::vector<Chessboard> history)
 
 bool Chessboard::check_move(Move m, Position previous_moved)
 {
+//  std::cout << "check_move" << m << std::endl;
   Piece p = get_piece_pos(m.start_get());
   Position::File f_end = m.end_get().file_get();
   Position::Rank r_end = m.end_get().rank_get();

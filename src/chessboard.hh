@@ -31,6 +31,7 @@ public:
   Position get_king_pos(Color c);
 
   bool check_move(Move m, Position previous_moved);
+  bool is_player_check(Position pos_king, Position previous_moved);
   bool is_player_mat(Position pos_king, Position previous_moved);
   bool is_player_pat(Color c, Position previous_moved);
   bool is_threefold_repetition(std::vector<Chessboard> history);

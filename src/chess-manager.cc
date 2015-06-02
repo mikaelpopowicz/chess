@@ -55,7 +55,7 @@ int ChessManager::go()
     }*/
 
     GameEngine gm(white_, black_);
-    gm.play();
+    std::cout << "play() = " << gm.play() <<std::endl;
     return 0;
   }
   else

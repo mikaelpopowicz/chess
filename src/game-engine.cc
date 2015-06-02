@@ -22,6 +22,7 @@ GameEngine::~GameEngine()
 
 int GameEngine::play()
 {
+  std::cout << "PLAY" << std::endl;
   if (p1_ == NULL || p2_ == NULL)
     return -1;
 
@@ -32,8 +33,6 @@ int GameEngine::play()
   while (status == 0)
   {
     actual_.print();
-    std::string osef;
-    std::cin >> osef;
     //Get a move from the current Player
     if (color_turn == p1_->color_get())
     {
@@ -45,6 +44,7 @@ int GameEngine::play()
       actual_move_ = p2_->move_get();
       p1_->last_opponent_move_set(actual_move_);
     }
+    std::cout <<"actual move: " <<  actual_move_ << std::endl;
 
     //Check move & rules ok
     if (actual_.check_move(actual_move_, previous_moved_) == false)
@@ -112,6 +112,7 @@ int GameEngine::play()
     else
       color_turn = p1_->color_get();
 
+    std::cout << "status:" << status <<std::endl;
     status = is_finished(color_turn);
   }
 
