@@ -18,7 +18,6 @@ Move PlayerPGN::move_get()
 {
   std::string raw_move = *iterator;
   iterator++;
-  std::cout << "raw_move == " << raw_move << std::endl;
 
   //Check if game termination is a "*"
   if (raw_move == "*")
@@ -54,7 +53,6 @@ Move PlayerPGN::move_get()
     else if (prom == "Q")
       promotion = QUEEN;
     raw_move = raw_move.substr(0, n);
-    std::cout << "r:"<<raw_move<<":"<<prom<<":"<<std::endl;
   }
 
   Position pos_nul(Position::FILE_FIRST, Position::RANK_FIRST);
@@ -84,9 +82,6 @@ Move PlayerPGN::move_get()
 
   if (raw_move.substr(index, 1) == "x")
     index++;
-
-  std::cout << "PieceType == " << type << std::endl;
-  std::cout << "last opponent move:" << last_opponent_move_ << std::endl;;
 
   Position end(fileMap_[raw_move.substr(index, 1)],
                rankMap_[raw_move.substr(index + 1, 1)]);
@@ -193,7 +188,6 @@ void PlayerPGN::last_opponent_move_set(const Move& last_opponent_move)
 
 Move PlayerPGN::little_rock()
 {
-  std::cout << "LITTLE ROCK METHOD" << std::endl;
   // Black positions
   Position begin = Position(Position::EVA, Position::ACHT);
   Position end = Position(Position::GUSTAV, Position::ACHT);
@@ -209,7 +203,6 @@ Move PlayerPGN::little_rock()
 
 Move PlayerPGN::big_rock()
 {
-  std::cout << "BIG ROCK METHOD" << std::endl;
   // Black positions
   Position begin = Position(Position::EVA, Position::ACHT);
   Position end = Position(Position::CESAR, Position::ACHT);

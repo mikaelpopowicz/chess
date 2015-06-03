@@ -1,9 +1,10 @@
 #include "game-engine.hh"
 #include <cmath>
 
-GameEngine::GameEngine(Player* p1, Player* p2)
+GameEngine::GameEngine(Player* p1, Player* p2, Observer o)
 : p1_(p1),
   p2_(p2),
+  observer_(o),
   previous_moved_(Position(Position::FILE_FIRST, Position::RANK_FIRST)),
   nb_turn_no_move_(0)
 {
@@ -16,27 +17,20 @@ GameEngine::~GameEngine()
   delete p2_;
 }
 
-/*void GameEngine::set_observer(Observer o)
-{
-}*/
-
 int GameEngine::play()
 {
-  std::cout << "PLAY" << std::endl;
   if (p1_ == NULL || p2_ == NULL)
     return -1;
 
   int turn = 1;
   Color color_turn = p1_->color_get();
-  //TODO o;notify_on_game_started();
+  observer_.notify_on_game_started();
   int status = 0;
   // While game not finished:
   while (status == 0)
   {
-    std::cout << "turn n°" << turn << std::endl;
     if (color_turn == BLACK)
       ++turn;
-    actual_.print();
     //Get a move from the current Player
     if (color_turn == p1_->color_get())
     {
@@ -60,11 +54,12 @@ int GameEngine::play()
     //Check move & rules ok
     if (actual_.check_move(actual_move_, false) == false)
     {
-      //TODO o.notify_on_player_disqualified(color_turn)
-      //TODO o.notify_on_game_finished()
+      observer_.notify_on_player_disqualified(color_turn);
+      observer_.notify_on_game_finished();
       return 2;
     }
 
+    Position start = actual_move_.start_get();
     Position end = actual_move_.end_get();
     //Check if piece taken
     Piece piece = actual_.get_piece_pos(actual_move_.start_get());
@@ -80,11 +75,11 @@ int GameEngine::play()
     {
       if (en_passant)
       {
-        //TODO notify_on_piece_taken(tmp.get_type(), end);
+        observer_.notify_on_piece_taken(tmp.get_type(), end);
       }
       else
       {
-        //TODO notify_on_piece_taken(destination.get_type(), end);
+        observer_.notify_on_piece_taken(destination.get_type(), end);
       }
       clear_history();
     }
@@ -95,25 +90,27 @@ int GameEngine::play()
     previous_moved_ = actual_move_.end_get();
     if (res == 0 || res == 1)
     {
-      //TODO notify_on_piece_moved(piece.get_type(), end);
+      observer_.notify_on_piece_moved(piece.get_type(), start, end);
       if (piece.get_type() == PAWN || destination.get_type() != NONE)
         nb_turn_no_move_ = 0;
     }
     if (res == 2)
     {
-      //TODO notify_on_kingside_castling(color_turn)
-      //TODO notify_on_piece_moved(KING, end)
-      //TODO notify_on_piece_moved(ROOK, Position(end.file_get(),static_cast<Position::Rank>(end.rank_get() - 1)))
+      observer_.notify_on_kingside_castling(color_turn);
+      observer_.notify_on_piece_moved(KING, start, end);
+      observer_.notify_on_piece_moved(ROOK, Position(Position::HECTOR, static_cast<Position::Rank>(end.rank_get())),
+                                            Position(Position::FELIX, static_cast<Position::Rank>(end.rank_get())));
     }
     else if (res == 3)
     {
-      //TODO notify_on_queenside_castling(color_turn)
-      //TODO notify_on_piece_moved(KING, end)
-      //TODO notify_on_piece_moved(ROOK, Position(end.file_get(),static_cast<Position::Rank>(end.rank_get() + 1)))
+      observer_.notify_on_queenside_castling(color_turn);
+      observer_.notify_on_piece_moved(KING, start, end);
+      observer_.notify_on_piece_moved(ROOK, Position(Position::ANNA, static_cast<Position::Rank>(end.rank_get())),
+                                            Position(Position::CESAR, static_cast<Position::Rank>(end.rank_get())));
     }
     else if (res == 1)
     {
-      //TODO notify_on_piece_promoted(actual_move_.promotion_get(), end);
+      observer_.notify_on_piece_promoted(actual_move_.promotion_get(), end);
     }
 
     //Check if player check
@@ -124,15 +121,14 @@ int GameEngine::play()
       color_turn = p1_->color_get();
 
     status = is_finished(color_turn);
-    std::cout << "status:" << status <<std::endl;
   }
 
   if (status == 3)
   {
-    //TODO o.notify_on_draw()
+    observer_.notify_on_draw();
   }
 
-  //TODO o.notify_on_game_finished()
+  observer_.notify_on_game_finished();
   return 0;
 }
 
@@ -143,7 +139,7 @@ int GameEngine::is_finished(Color c)
   Position pos_king = actual_.get_king_pos(c);
   if (actual_.is_player_mat(pos_king))
   {
-    //TODO o.notify_on_player_mat...
+    observer_.notify_on_player_mat(c);
     //if c = white, c'est 2 qui a gagné : return 2;
     if (c == WHITE)
       return 2;
@@ -154,13 +150,16 @@ int GameEngine::is_finished(Color c)
   // is player pat ?
   if (actual_.is_player_pat(c))
   {
-    //TODO o.notify_on_player_pat(c)
+    observer_.notify_on_player_pat(c);
     return 3;
   }
 
   // is draw ?
   if (nb_turn_no_move_ >= 50 || actual_.is_threefold_repetition(history_))
     return 3;
+
+  if (actual_.is_player_check(actual_.get_king_pos(c)))
+    observer_.notify_on_player_check(c);
 
   // is actual player timeout ?
   return 0;
