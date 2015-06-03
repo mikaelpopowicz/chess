@@ -20,7 +20,7 @@ std::vector<std::string> ParserPGN::get_white_move()
 bool is_end_token(std::string token)
 {
   return (token == "1-0" || token == "0-1" ||
-          token == "1/2-1/2" || token == "*");
+          token == "1/2-1/2");
 }
 
 bool ParserPGN::parse()
@@ -84,6 +84,8 @@ bool ParserPGN::parse()
         white_player_move_.push_back(white_move);
         black_player_move_.push_back(black_move);
       }
+      if (white_move == "*" || black_move == "*")
+        is_the_end = true;
 
       if (is_the_end)
         break;

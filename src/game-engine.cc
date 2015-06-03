@@ -46,6 +46,14 @@ int GameEngine::play()
     }
     std::cout <<"actual move: " <<  actual_move_ << std::endl;
 
+    // "*" game-termination has a specific move
+    Position pos_draw(Position::FILE_LAST, Position::RANK_LAST);
+    if (actual_move_.start_get() == pos_draw &&
+        actual_move_.end_get() == pos_draw)
+    {
+      return 3;
+    }
+
     //Check move & rules ok
     if (actual_.check_move(actual_move_, previous_moved_) == false)
     {
@@ -112,8 +120,8 @@ int GameEngine::play()
     else
       color_turn = p1_->color_get();
 
-    std::cout << "status:" << status <<std::endl;
     status = is_finished(color_turn);
+    std::cout << "status:" << status <<std::endl;
   }
 
   if (status == 3)

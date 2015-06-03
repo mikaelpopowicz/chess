@@ -20,6 +20,12 @@ Move PlayerPGN::move_get()
   iterator++;
   std::cout << "raw_move == " << raw_move << std::endl;
 
+  //Check if game termination is a "*"
+  if (raw_move == "*")
+  {
+    Position pos_draw(Position::FILE_LAST, Position::RANK_LAST);
+    return Move(pos_draw, pos_draw);
+  }
   //Check if this is a rock
   if (raw_move[0] == 'O')
   {
