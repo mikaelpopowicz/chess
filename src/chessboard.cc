@@ -118,7 +118,6 @@ int Chessboard::make_move(Move m)
       black_king_ = m.end_get();
     }
   }
-
   return res;
 }
 
@@ -148,7 +147,7 @@ bool Chessboard::is_player_check(Position pos_king, Position prev)
     Position pos_now(f, r);
     Piece tmp = get_piece(f, r);
     if (tmp.get_type() != NONE && tmp.get_color() != king.get_color() &&
-        check_move(Move(pos_now, pos_king), prev))
+        check_move(Move(pos_now, pos_king), prev, true))
       return true;
 
     ++f;
@@ -199,7 +198,7 @@ bool Chessboard::is_player_mat(Position pos_king, Position prev)
       PieceType pt = tmp.get_type();
       Color c = tmp.get_color();
 
-      if (check_move(m, prev))
+      if (check_move(m, prev, true))
       {
         make_move(m);
         bool is_check = is_player_check(pos_king, prev);
@@ -210,7 +209,6 @@ bool Chessboard::is_player_mat(Position pos_king, Position prev)
           make_move(undo);
           tmp.set_type(pt);
           tmp.set_color(c);
-          print();
           return false;
         }
         make_move(undo);
@@ -254,7 +252,7 @@ bool Chessboard::is_player_pat(Color c, Position previous_moved)
   // For each piece, it checks if it can go to the others positions
   for (Position p_piece : pos_pieces)
     for (Position p_other : others)
-      if (check_move(Move(p_piece, p_other), previous_moved))
+      if (check_move(Move(p_piece, p_other), previous_moved, true))
         return false;
   return true;
 }
@@ -272,7 +270,7 @@ bool Chessboard::is_threefold_repetition(std::vector<Chessboard> history)
   return false;
 }
 
-bool Chessboard::check_move(Move m, Position previous_moved)
+bool Chessboard::check_move(Move m, Position previous_moved, bool is_test)
 {
 //  std::cout << "check_move" << m << std::endl;
   Piece p = get_piece_pos(m.start_get());
@@ -284,7 +282,7 @@ bool Chessboard::check_move(Move m, Position previous_moved)
     return false;
 
   if (p.get_type() == PAWN)
-    return check_pawn_move(m, p, previous_moved);
+    return check_pawn_move(m, p, previous_moved, is_test);
 
   else if (p.get_type() == KNIGHT)
     return check_knight_move(m);
@@ -304,7 +302,8 @@ bool Chessboard::check_move(Move m, Position previous_moved)
   return false;
 }
 
-bool Chessboard::check_pawn_move(Move m, Piece p, Position previous_moved)
+bool Chessboard::check_pawn_move(Move m, Piece p, Position previous_moved,
+                                 bool is_test)
 {
   Position::File f_start = m.start_get().file_get();
   Position::Rank r_start = m.start_get().rank_get();
@@ -343,7 +342,8 @@ bool Chessboard::check_pawn_move(Move m, Piece p, Position previous_moved)
       // Else if the previous move was a pawn which moved 2 cells
       else if (en_passant)
       {
-        tmp.set_type(NONE);
+        if (!is_test)
+          tmp.set_type(NONE);
         //TODO o.notify_on_piece_token(tmp.get_type(), pos);
         return true;
       }
@@ -472,7 +472,8 @@ bool Chessboard::check_king_move(Move m, Color c, Position prev)
       Piece tmp = get_piece(f, r);
       if (tmp.get_type() != NONE && tmp.get_type() != KING
           && tmp.get_color() != c
-          && check_move(Move(Position(f, r), Position(f_end, r_end)), prev))
+          && check_move(Move(Position(f, r), Position(f_end, r_end)),
+                        prev, true))
         return false;
       ++f;
       if (f == Position::FILE_LAST)
@@ -507,7 +508,7 @@ bool Chessboard::check_king_move(Move m, Color c, Position prev)
         if (tmp.get_type() != NONE && tmp.get_type() != KING
             && tmp.get_color() != c
             && check_move(Move(Position(f, r),
-                               Position(f_tmp, r_start)), prev))
+                               Position(f_tmp, r_start)), prev, false))
           return false;
         ++f;
         if (f == Position::FILE_LAST)

@@ -122,7 +122,7 @@ Position PlayerPGN::get_old_position(PieceType type,
 
     // We check if the piece has the good type & move is possible
     if (piece.get_type() == type && piece.get_color() == color_ &&
-        board_.check_move(m_tmp, last_opponent_move_.end_get()))
+        board_.check_move(m_tmp, last_opponent_move_.end_get(), true))
       return Position(f_tmp, r_tmp);
 
     // INCREMENTATION PART

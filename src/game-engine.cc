@@ -26,12 +26,16 @@ int GameEngine::play()
   if (p1_ == NULL || p2_ == NULL)
     return -1;
 
+  int turn = 1;
   Color color_turn = p1_->color_get();
   //TODO o;notify_on_game_started();
   int status = 0;
   // While game not finished:
   while (status == 0)
   {
+    std::cout << "turn n°" << turn << std::endl;
+    if (color_turn == BLACK)
+      ++turn;
     actual_.print();
     //Get a move from the current Player
     if (color_turn == p1_->color_get())
@@ -55,7 +59,7 @@ int GameEngine::play()
     }
 
     //Check move & rules ok
-    if (actual_.check_move(actual_move_, previous_moved_) == false)
+    if (actual_.check_move(actual_move_, previous_moved_, false) == false)
     {
       //TODO o.notify_on_player_disqualified(color_turn)
       //TODO o.notify_on_game_finished()

@@ -30,7 +30,7 @@ public:
   bool has_king_moved(Color c);
   Position get_king_pos(Color c);
 
-  bool check_move(Move m, Position previous_moved);
+  bool check_move(Move m, Position previous_moved, bool is_test);
   bool is_player_check(Position pos_king, Position previous_moved);
   bool is_player_mat(Position pos_king, Position previous_moved);
   bool is_player_pat(Color c, Position previous_moved);
@@ -47,7 +47,8 @@ protected:
   Position white_king_;
   Position black_king_;
 
-  bool check_pawn_move(Move m, Piece p, Position previous_moved);
+  bool check_pawn_move(Move m, Piece p, Position previous_moved,
+                       bool is_test);
   bool check_rook_move(Move m);
   bool check_knight_move(Move m);
   bool check_bishop_move(Move m);
