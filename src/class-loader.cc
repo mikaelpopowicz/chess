@@ -4,7 +4,10 @@ ClassLoader::ClassLoader()
 {}
 
 ClassLoader::~ClassLoader()
-{}
+{
+  for (auto lib : this->libs_)
+    dlclose(lib);
+}
 
 bool ClassLoader::load_libraries(std::vector<std::string> libs)
 {
@@ -20,6 +23,7 @@ bool ClassLoader::load_libraries(std::vector<std::string> libs)
     if (!plugin)
     {
       std::cerr << "Can't load symbol : " << dlerror() << std::endl;
+      dlclose(lib);
       return false;
     }
     this->libs_.push_back(lib);
@@ -37,21 +41,3 @@ std::vector<ListenerExport*> ClassLoader::get_plugins()
 {
   return this->plugins_;
 }
-/*
-Listener* ClassLoader::get_instance(void* classptr)
-{
-  ListenerExport* test = static_cast<ListenerExport*>(dlsym(classptr, "listener_plugin"));
-  if (!test)
-    std::cerr << "Merde !" << std::endl;
-  //std::cout << "ListenerExport created ! -> " << test->name << std::endl;
-  const char* dlsym_error = dlerror();
-  if (dlsym_error)
-  {
-    std::cerr << "Can not create instance" << std::endl;
-    return NULL;
-  }
-  std::cout << "Return a Listener !" << std::endl;
-  Listener* toto = test->create();
-  return toto;
-}
-*/
