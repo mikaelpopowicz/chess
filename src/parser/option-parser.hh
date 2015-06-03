@@ -3,6 +3,7 @@
 
 # include <string>
 # include <vector>
+# include <iostream>
 
 /*!
 ** \brief Options parser
@@ -18,13 +19,13 @@ public:
   ** @return bool If errors occured
   */
   bool parse();
-  bool isPgn();
-  std::string getFile();
-  std::string getWhitePlayer();
-  std::string getBlackPlayer();
-  std::vector<std::string> getLibs();
+  bool is_pgn();
+  std::string get_file();
+  std::string get_white_player();
+  std::string get_black_player();
+  std::vector<std::string> get_libs();
   void print();
-  void printUsage();
+  void print_usage();
 
 private:
   int argc_;
@@ -36,8 +37,8 @@ private:
   std::string player2_;
   std::vector<std::string> libs_;
 
-  void parsePlayer(std::string token);
-  void parseLib(std::string token);
+  void parse_player(std::string token);
+  void parse_lib(std::string token);
 };
 
 #endif /* !OPTION_PARSER_HH_ */

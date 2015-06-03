@@ -1,9 +1,5 @@
 #include "option-parser.hh"
 
-#include <string>
-#include <vector>
-#include <iostream>
-
 OptionParser::OptionParser(int argc, char **argv)
     : argc_(argc),
       argv_(argv),
@@ -28,7 +24,7 @@ bool OptionParser::parse()
         token = std::string(this->argv_[i]);
 
         if (token.find("--") == 0)
-            this->parsePlayer(token);
+            this->parse_player(token);
         else if (token.find(".so", token.length() - 4) != std::string::npos)
             this->libs_.push_back(token);
         else if (token.find(".pgn", token.length() - 5) != std::string::npos
@@ -51,27 +47,32 @@ bool OptionParser::parse()
     return !(this->error_);
 }
 
-bool OptionParser::isPgn()
+bool OptionParser::is_pgn()
 {
     return this->pgn_;
 }
 
-std::string OptionParser::getFile()
+std::string OptionParser::get_file()
 {
     return this->file_;
 }
 
-std::string OptionParser::getWhitePlayer()
+std::string OptionParser::get_white_player()
 {
     return this->player1_;
 }
 
-std::string OptionParser::getBlackPlayer()
+std::string OptionParser::get_black_player()
 {
   return this->player2_;
 }
 
-void OptionParser::parsePlayer(std::string token)
+std::vector<std::string> OptionParser::get_libs()
+{
+  return this->libs_;
+}
+
+void OptionParser::parse_player(std::string token)
 {
     token = token.substr(2);
     std::string player;
@@ -110,7 +111,7 @@ void OptionParser::print()
 {
     std::cout << "-----------------------" << std::endl;
     std::cout << "Options : " << std::endl;
-    std::cout << "Is PGN ?\t" << std::boolalpha << this->isPgn() << std::endl;
+    std::cout << "Is PGN ?\t" << std::boolalpha << this->is_pgn() << std::endl;
     std::cout << "List of libs :" << std::endl;
     for (std::string st : this->libs_)
     {
@@ -121,7 +122,7 @@ void OptionParser::print()
     std::cout << "PLayer black:\t" << this->player2_ << std::endl;
 }
 
-void OptionParser::printUsage()
+void OptionParser::print_usage()
 {
     std::string usage = "Usage: ./chess [--player-white=[human | *.so]";
     usage.append(" --player-black=[human | *.so ]] [*.so ...] [file.pgn]");

@@ -7,6 +7,10 @@
 # include "player/player-pgn.hh"
 # include "player/player-human.hh"
 # include "parser/parserPGN.hh"
+# include "parser/option-parser.hh"
+# include "class-loader.hh"
+# include "observer.hh"
+# include "game-engine.hh"
 
 /*!
 ** \brief Chess manager (main)
@@ -28,7 +32,7 @@ private:
   char **argv_;
   Player *white_;
   Player *black_;
-  void createPGNplayers(ParserPGN parser);
+  void create_pgn_players(ParserPGN parser);
 };
 
 #endif /* !CHESS_MANAGER_HH_ */
