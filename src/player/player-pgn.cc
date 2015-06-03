@@ -39,6 +39,24 @@ Move PlayerPGN::move_get()
     }
   }
 
+  PieceType promotion = NONE;
+  // If there is a promotion:
+  std::string::size_type n = raw_move.find("=");
+  if (n != std::string::npos)
+  {
+    std::string prom = raw_move.substr(n + 1);
+    if (prom == "R")
+      promotion = ROOK;
+    else if (prom == "B")
+      promotion = BISHOP;
+    else if (prom == "N")
+      promotion = KNIGHT;
+    else if (prom == "Q")
+      promotion = QUEEN;
+    raw_move = raw_move.substr(0, n);
+    std::cout << "r:"<<raw_move<<":"<<prom<<":"<<std::endl;
+  }
+
   Position pos_nul(Position::FILE_FIRST, Position::RANK_FIRST);
 
   int index = 0;
@@ -97,7 +115,7 @@ Move PlayerPGN::move_get()
   else
     begin = get_old_position(type, end, f_start, r_start);
 
-  Move m(begin, end);
+  Move m(begin, end, promotion);
   board_.make_move(m);
   return m;
 }
