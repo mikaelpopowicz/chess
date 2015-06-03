@@ -176,17 +176,14 @@ void PlayerPGN::last_opponent_move_set(const Move& last_opponent_move)
 Move PlayerPGN::little_rock()
 {
   std::cout << "LITTLE ROCK METHOD" << std::endl;
-  Position begin(Position::FILE_FIRST, Position::RANK_FIRST);
-  Position end(Position::FILE_FIRST, Position::RANK_FIRST);
+  // Black positions
+  Position begin = Position(Position::EVA, Position::ACHT);
+  Position end = Position(Position::GUSTAV, Position::ACHT);
+
   if (color_ == Color::WHITE)
   {
     begin = Position(Position::EVA, Position::EINS);
     end = Position(Position::GUSTAV, Position::EINS);
-  }
-  else
-  {
-    begin = Position(Position::EVA, Position::ACHT);
-    end = Position(Position::GUSTAV, Position::ACHT);
   }
   board_.make_move(Move(begin, end));
   return Move(begin, end, PieceType::NONE);
@@ -195,18 +192,17 @@ Move PlayerPGN::little_rock()
 Move PlayerPGN::big_rock()
 {
   std::cout << "BIG ROCK METHOD" << std::endl;
+  // Black positions
+  Position begin = Position(Position::EVA, Position::ACHT);
+  Position end = Position(Position::CESAR, Position::ACHT);
+
   if (color_ == Color::WHITE)
   {
-    Position begin(Position::EVA, Position::EINS);
-    Position end(Position::CESAR, Position::EINS);
-    return Move(begin, end);
+    begin = Position(Position::EVA, Position::EINS);
+    end = Position(Position::CESAR, Position::EINS);
   }
-  else
-  {
-    Position begin(Position::EVA, Position::ACHT);
-    Position end(Position::CESAR, Position::ACHT);
-    return Move(begin, end);
-  }
+  board_.make_move(Move(begin, end));
+  return Move(begin, end);
 }
 
 bool PlayerPGN::is_emplacement(std::string c)
