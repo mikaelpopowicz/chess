@@ -22,18 +22,21 @@ GameEngine::~GameEngine()
 
 int GameEngine::play()
 {
+  std::cout << "PLAY" << std::endl;
   if (p1_ == NULL || p2_ == NULL)
     return -1;
 
+  int turn = 1;
   Color color_turn = p1_->color_get();
   //TODO o;notify_on_game_started();
   int status = 0;
   // While game not finished:
   while (status == 0)
   {
+    std::cout << "turn n°" << turn << std::endl;
+    if (color_turn == BLACK)
+      ++turn;
     actual_.print();
-    std::string osef;
-    std::cin >> osef;
     //Get a move from the current Player
     if (color_turn == p1_->color_get())
     {
@@ -46,8 +49,16 @@ int GameEngine::play()
       p1_->last_opponent_move_set(actual_move_);
     }
 
+    // "*" game-termination has a specific move
+    Position pos_draw(Position::FILE_LAST, Position::RANK_LAST);
+    if (actual_move_.start_get() == pos_draw &&
+        actual_move_.end_get() == pos_draw)
+    {
+      return 3;
+    }
+
     //Check move & rules ok
-    if (actual_.check_move(actual_move_, previous_moved_) == false)
+    if (actual_.check_move(actual_move_, false) == false)
     {
       //TODO o.notify_on_player_disqualified(color_turn)
       //TODO o.notify_on_game_finished()
@@ -113,6 +124,7 @@ int GameEngine::play()
       color_turn = p1_->color_get();
 
     status = is_finished(color_turn);
+    std::cout << "status:" << status <<std::endl;
   }
 
   if (status == 3)
@@ -129,7 +141,7 @@ int GameEngine::is_finished(Color c)
   // Check is player mat ? for each king (white&black), find his possible
   // moves. if each move is controlled by a piece of another color, he's mat
   Position pos_king = actual_.get_king_pos(c);
-  if (actual_.is_player_mat(pos_king, previous_moved_))
+  if (actual_.is_player_mat(pos_king))
   {
     //TODO o.notify_on_player_mat...
     //if c = white, c'est 2 qui a gagné : return 2;
@@ -140,7 +152,7 @@ int GameEngine::is_finished(Color c)
   }
 
   // is player pat ?
-  if (actual_.is_player_pat(c, previous_moved_))
+  if (actual_.is_player_pat(c))
   {
     //TODO o.notify_on_player_pat(c)
     return 3;

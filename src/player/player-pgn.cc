@@ -20,6 +20,12 @@ Move PlayerPGN::move_get()
   iterator++;
   std::cout << "raw_move == " << raw_move << std::endl;
 
+  //Check if game termination is a "*"
+  if (raw_move == "*")
+  {
+    Position pos_draw(Position::FILE_LAST, Position::RANK_LAST);
+    return Move(pos_draw, pos_draw);
+  }
   //Check if this is a rock
   if (raw_move[0] == 'O')
   {
@@ -31,6 +37,24 @@ Move PlayerPGN::move_get()
     {
       return big_rock();
     }
+  }
+
+  PieceType promotion = NONE;
+  // If there is a promotion:
+  std::string::size_type n = raw_move.find("=");
+  if (n != std::string::npos)
+  {
+    std::string prom = raw_move.substr(n + 1);
+    if (prom == "R")
+      promotion = ROOK;
+    else if (prom == "B")
+      promotion = BISHOP;
+    else if (prom == "N")
+      promotion = KNIGHT;
+    else if (prom == "Q")
+      promotion = QUEEN;
+    raw_move = raw_move.substr(0, n);
+    std::cout << "r:"<<raw_move<<":"<<prom<<":"<<std::endl;
   }
 
   Position pos_nul(Position::FILE_FIRST, Position::RANK_FIRST);
@@ -91,7 +115,7 @@ Move PlayerPGN::move_get()
   else
     begin = get_old_position(type, end, f_start, r_start);
 
-  Move m(begin, end);
+  Move m(begin, end, promotion);
   board_.make_move(m);
   return m;
 }
@@ -116,7 +140,7 @@ Position PlayerPGN::get_old_position(PieceType type,
 
     // We check if the piece has the good type & move is possible
     if (piece.get_type() == type && piece.get_color() == color_ &&
-        board_.check_move(m_tmp, last_opponent_move_.end_get()))
+        board_.check_move(m_tmp, false))
       return Position(f_tmp, r_tmp);
 
     // INCREMENTATION PART
@@ -170,35 +194,33 @@ void PlayerPGN::last_opponent_move_set(const Move& last_opponent_move)
 Move PlayerPGN::little_rock()
 {
   std::cout << "LITTLE ROCK METHOD" << std::endl;
+  // Black positions
+  Position begin = Position(Position::EVA, Position::ACHT);
+  Position end = Position(Position::GUSTAV, Position::ACHT);
+
   if (color_ == Color::WHITE)
   {
-    Position begin(Position::EVA, Position::EINS);
-    Position end(Position::GUSTAV, Position::EINS);
-    return Move(begin, end, PieceType::NONE);
+    begin = Position(Position::EVA, Position::EINS);
+    end = Position(Position::GUSTAV, Position::EINS);
   }
-  else
-  {
-    Position begin(Position::EVA, Position::ACHT);
-    Position end(Position::GUSTAV, Position::ACHT);
-    return Move(begin, end, PieceType::NONE);
-  }
+  board_.make_move(Move(begin, end));
+  return Move(begin, end, PieceType::NONE);
 }
 
 Move PlayerPGN::big_rock()
 {
   std::cout << "BIG ROCK METHOD" << std::endl;
+  // Black positions
+  Position begin = Position(Position::EVA, Position::ACHT);
+  Position end = Position(Position::CESAR, Position::ACHT);
+
   if (color_ == Color::WHITE)
   {
-    Position begin(Position::EVA, Position::EINS);
-    Position end(Position::CESAR, Position::EINS);
-    return Move(begin, end);
+    begin = Position(Position::EVA, Position::EINS);
+    end = Position(Position::CESAR, Position::EINS);
   }
-  else
-  {
-    Position begin(Position::EVA, Position::ACHT);
-    Position end(Position::CESAR, Position::ACHT);
-    return Move(begin, end);
-  }
+  board_.make_move(Move(begin, end));
+  return Move(begin, end);
 }
 
 bool PlayerPGN::is_emplacement(std::string c)
