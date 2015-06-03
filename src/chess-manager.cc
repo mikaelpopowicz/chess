@@ -1,6 +1,4 @@
 #include "chess-manager.hh"
-#include "parser/option-parser.hh"
-#include "game-engine.hh"
 
 ChessManager::ChessManager(int argc, char **argv)
   : argc_(argc),
@@ -26,47 +24,51 @@ int ChessManager::go()
   OptionParser opt(this->argc_, this->argv_);
   if (opt.parse())
   {
-    if (opt.isPgn())
+    if (opt.is_pgn())
     {
-      ParserPGN parserPGN(opt.getFile());
+      ParserPGN parserPGN(opt.get_file());
       if (parserPGN.parse())
-        createPGNplayers(parserPGN);
+        create_pgn_players(parserPGN);
       else
         return 2;
     }
     else
     {
-      if (opt.getWhitePlayer() == "human")
+      if (opt.get_white_player() == "human")
       {
         this->white_ = new PlayerHuman(Color::WHITE);
       }
 
-      if (opt.getBlackPlayer() == "human")
+      if (opt.get_black_player() == "human")
         this->black_ = new PlayerHuman(Color::BLACK);
     }
 
-    this->white_->print();
-    this->black_->print();
-
-/*    for (int i = 0; i < 20; i++)
+    Observer obs;
+    ClassLoader loader;
+    if (opt.get_libs().size() > 0)
     {
-      Move move = this->black_->move_get();
-      std::cout << move << std::endl;
-    }*/
+      if (loader.load_libraries(opt.get_libs()))
+      {
+        for (ListenerExport* plugin : loader.get_plugins())
+        {
+          Listener* toAdd = plugin->create();
+          obs.add_observer(toAdd);
+        }
+      }
+    }
 
-    GameEngine gm(white_, black_);
-    gm.play();
-    return 0;
+    GameEngine gm(white_, black_, obs);
+    return gm.play();
   }
   else
   {
-    opt.printUsage();
+    opt.print_usage();
     return 1;
   }
 }
 
 
-void ChessManager::createPGNplayers(ParserPGN parser)
+void ChessManager::create_pgn_players(ParserPGN parser)
 {
   this->white_ = new PlayerPGN(Color::WHITE, parser.get_white_move());
   this->black_ = new PlayerPGN(Color::BLACK, parser.get_black_move());

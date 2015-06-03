@@ -1,10 +1,10 @@
-#ifndef GAME_ENGINE_HH
-# define GAME_ENGINE_HH
+#ifndef GAME_ENGINE_HH_
+# define GAME_ENGINE_HH_
 
 # include <vector>
 # include "player/player.hh"
 # include "move.hh"
-//# include "observer.hh"
+# include "observer.hh"
 # include "chessboard.hh"
 
 /*!
@@ -13,10 +13,9 @@
 class GameEngine
 {
 public:
-  GameEngine(Player* p1, Player* p2);
+  GameEngine(Player* p1, Player* p2, Observer o);
   virtual ~GameEngine();
 
-//  void set_observer(Observer o);
   /*!
   ** Play the game.
   ** @return 2 if a move is invalid, else 0
@@ -32,6 +31,7 @@ public:
 protected:
   Player* p1_;
   Player* p2_;
+  Observer observer_;
   Move actual_move_;
   Position previous_moved_;
   /*!
@@ -44,7 +44,6 @@ protected:
   ** The current chessboard
   */
   Chessboard actual_;
-//  Observer observer_;
   /*!
   ** This history is used to check for the threefold repetition
   ** (if the exact same configuration occurs three times).
@@ -55,4 +54,4 @@ protected:
   void clear_history();
 };
 
-#endif /*! GAME_ENGINE_HH */
+#endif /*! GAME_ENGINE_HH_ */

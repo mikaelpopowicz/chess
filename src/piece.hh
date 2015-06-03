@@ -1,5 +1,5 @@
-#ifndef PIECE_HH
-# define PIECE_HH
+#ifndef PIECE_HH_
+# define PIECE_HH_
 
 # include "piece-type.hh"
 # include "color.hh"
@@ -26,4 +26,4 @@ protected:
 
 # include "piece.hxx"
 
-#endif /*! PIECE_HH */
+#endif /*! PIECE_HH_ */

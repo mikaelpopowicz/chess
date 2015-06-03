@@ -10,8 +10,10 @@
 class Observer
 {
 public:
-  Observer(std::vector<Listener*> listeners);
+  Observer();
   ~Observer();
+  void add_observer(Listener* listener);
+  std::vector<Listener*> get_listeners();
 
   void notify_register_chessboard_interface(const ChessboardInterface& chessboard_interface);
   void notify_on_game_started();
