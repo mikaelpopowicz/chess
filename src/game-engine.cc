@@ -48,7 +48,6 @@ int GameEngine::play()
       actual_move_ = p2_->move_get();
       p1_->last_opponent_move_set(actual_move_);
     }
-    std::cout <<"actual move: " <<  actual_move_ << std::endl;
 
     // "*" game-termination has a specific move
     Position pos_draw(Position::FILE_LAST, Position::RANK_LAST);
@@ -59,7 +58,7 @@ int GameEngine::play()
     }
 
     //Check move & rules ok
-    if (actual_.check_move(actual_move_, previous_moved_, false) == false)
+    if (actual_.check_move(actual_move_, false) == false)
     {
       //TODO o.notify_on_player_disqualified(color_turn)
       //TODO o.notify_on_game_finished()
@@ -142,7 +141,7 @@ int GameEngine::is_finished(Color c)
   // Check is player mat ? for each king (white&black), find his possible
   // moves. if each move is controlled by a piece of another color, he's mat
   Position pos_king = actual_.get_king_pos(c);
-  if (actual_.is_player_mat(pos_king, previous_moved_))
+  if (actual_.is_player_mat(pos_king))
   {
     //TODO o.notify_on_player_mat...
     //if c = white, c'est 2 qui a gagné : return 2;
@@ -153,7 +152,7 @@ int GameEngine::is_finished(Color c)
   }
 
   // is player pat ?
-  if (actual_.is_player_pat(c, previous_moved_))
+  if (actual_.is_player_pat(c))
   {
     //TODO o.notify_on_player_pat(c)
     return 3;
