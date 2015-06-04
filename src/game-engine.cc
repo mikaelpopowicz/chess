@@ -1,5 +1,6 @@
 #include "game-engine.hh"
 #include <cmath>
+#include "chessboard-adapter.hh"
 
 GameEngine::GameEngine(Player* p1, Player* p2, Observer o)
 : p1_(p1),
@@ -24,6 +25,8 @@ int GameEngine::play()
 
   int turn = 1;
   Color color_turn = p1_->color_get();
+  ChessboardAdapter cbAdapter(actual_);
+  observer_.notify_register_chessboard_interface(cbAdapter);
   observer_.notify_on_game_started();
   int status = 0;
   // While game not finished:
