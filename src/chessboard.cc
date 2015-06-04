@@ -207,7 +207,6 @@ bool Chessboard::is_player_mat(Position pos_king)
     r = Position::EINS;
     while (r != Position::RANK_LAST)
     {
-      PieceType piece_pt = get_piece_pos(pieces_pos[i]).get_type();
 
       Position pos_tmp(f, r);
       Move m(pieces_pos[i], pos_tmp);
@@ -219,9 +218,7 @@ bool Chessboard::is_player_mat(Position pos_king)
       if (check_move(m, true))
       {
         make_move(m);
-        bool is_check = is_player_check(pos_king);
-        if (piece_pt == KING)
-          is_check = is_player_check(pos_tmp);
+        bool is_check = is_player_check(get_king_pos(king.get_color()));
         if (!is_check)
         {
           make_move(undo);
@@ -351,8 +348,8 @@ bool Chessboard::check_pawn_move(Move m, Piece p, bool is_test)
           || (tmp.get_color() == BLACK && pos.rank_get() == Position::FUNF));
 
     //If the pawn goes on an adjacent column
-    if ((is_whi && r_end == ++r_tmp && fabs(r_start - r_end) == 1)
-        || (!is_whi && r_end == --r_tmp && fabs(r_start - r_end) == 1))
+    if ((is_whi && r_end == ++r_tmp && fabs(f_start - f_end) == 1)
+        || (!is_whi && r_end == --r_tmp && fabs(f_start - f_end) == 1))
     {
       // If the goal of the pawn is an opponent piece
       if ((p_end.get_color() != p.get_color() && p_end.get_type() != NONE))
