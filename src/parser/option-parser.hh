@@ -37,8 +37,8 @@ private:
   std::string player2_;
   std::vector<std::string> libs_;
 
-  void parse_player(std::string token);
-  void parse_lib(std::string token);
+  bool parse_player();
+  bool parse_pgn();
 };
 
 #endif /* !OPTION_PARSER_HH_ */

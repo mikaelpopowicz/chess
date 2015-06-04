@@ -16,35 +16,33 @@ OptionParser::~OptionParser()
 bool OptionParser::parse()
 {
     std::string token;
+    int is_human_player = 0;
     for (int i(1); i < this->argc_; ++i)
     {
-        if (this->error_)
-            return false;
-
-        token = std::string(this->argv_[i]);
-
-        if (token.find("--") == 0)
-            this->parse_player(token);
-        else if (token.find(".so", token.length() - 4) != std::string::npos)
-            this->libs_.push_back(token);
-        else if (token.find(".pgn", token.length() - 5) != std::string::npos
-            && i == this->argc_ - 1)
+      token = std::string(this->argv_[i]);
+      if (token.find("--") == 0)
         {
-            if (this->player1_ !=  "" || this->player2_ != "")
-                return false;
-            else
-            {
-               this->file_ = token;
-               this->pgn_ = true;
-            }
+          is_human_player++;
+          break;
         }
-        else
-            return false;
     }
-    if ((this->player1_ == "" || this->player2_ == "") && this->pgn_ == false)
-        this->error_ = true;
 
-    return !(this->error_);
+    if (is_human_player > 0)
+      return this->parse_player();
+    return this->parse_pgn();
+}
+
+bool OptionParser::parse_pgn()
+{
+  std::string token(argv_[argc_ - 1]);
+  this->file_ = token;
+  for (int i = 1; i < argc_ - 1; i++)
+    {
+      token = std::string(argv_[i]);
+      this->libs_.push_back(token);
+    }
+  pgn_ = true;
+  return true;
 }
 
 bool OptionParser::is_pgn()
@@ -72,39 +70,50 @@ std::vector<std::string> OptionParser::get_libs()
   return this->libs_;
 }
 
-void OptionParser::parse_player(std::string token)
+bool OptionParser::parse_player()
 {
-    token = token.substr(2);
-    std::string player;
-    std::string::size_type count = token.find('=');
-    if (count != std::string::npos)
+  std::string token;
+  for (int i = 1; i < argc_ - 1; i++)
     {
-        player = token.substr(count + 1);
-        if (player == "human"
-            || player.find(".so", player.length() - 4) != std::string::npos)
+      token = std::string(argv_[i]);
+      if (token.find("--") == 0)
         {
-            if (token.substr(0, count) == "player-white")
+          token = token.substr(2);
+          std::string player;
+          std::string::size_type count = token.find('=');
+          if (count != std::string::npos)
             {
-                if (this->player1_ == "")
-                    this->player1_ = player;
-                else
-                    this->error_ = true;
+              player = token.substr(count + 1);
+              if (player == "human"
+                  || player.find(".so", player.length() - 4) != std::string::npos)
+                {
+                  if (token.substr(0, count) == "player-white")
+                    {
+                      if (this->player1_ == "")
+                        this->player1_ = player;
+                      else
+                        return false;
+                    }
+                  else if (token.substr(0, count) == "player-black")
+                    {
+                      if (this->player2_ == "")
+                        this->player2_ = player;
+                      else
+                        return false;
+                    }
+                  else
+                    return false;
+                }
+              else
+                return false;
             }
-            else if (token.substr(0, count) == "player-black")
-            {
-                if (this->player2_ == "")
-                    this->player2_ = player;
-                else
-                    this->error_ = true;
-            }
-            else
-                this->error_ = true;
+          else
+            return false;
         }
-        else
-            this->error_ = true;
+      else
+        this->libs_.push_back(token);
     }
-    else
-        this->error_ = true;
+  return true;
 }
 
 void OptionParser::print()

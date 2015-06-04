@@ -56,7 +56,6 @@ int ChessManager::go()
         }
       }
     }
-
     GameEngine gm(white_, black_, obs);
     return gm.play();
 
