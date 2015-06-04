@@ -73,7 +73,7 @@ std::vector<std::string> OptionParser::get_libs()
 bool OptionParser::parse_player()
 {
   std::string token;
-  for (int i = 1; i < argc_ - 1; i++)
+  for (int i = 1; i < argc_; i++)
     {
       token = std::string(argv_[i]);
       if (token.find("--") == 0)
