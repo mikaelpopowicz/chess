@@ -51,6 +51,8 @@ int GameEngine::play()
     if (actual_move_.start_get() == pos_draw &&
         actual_move_.end_get() == pos_draw)
     {
+      observer_.notify_on_player_disqualified(color_turn);
+      observer_.notify_on_game_finished();
       return 3;
     }
 
@@ -78,7 +80,7 @@ int GameEngine::play()
     {
       if (en_passant)
       {
-        observer_.notify_on_piece_taken(tmp.get_type(), end);
+        observer_.notify_on_piece_taken(tmp.get_type(), pos);
       }
       else
       {
