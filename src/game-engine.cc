@@ -157,12 +157,12 @@ int GameEngine::is_finished(Color c)
     return 3;
   }
 
+  if (actual_.is_player_check(actual_.get_king_pos(c)))
+    observer_.notify_on_player_check(c);
+
   // is draw ?
   if (nb_turn_no_move_ >= 50 || actual_.is_threefold_repetition(history_))
     return 3;
-
-  if (actual_.is_player_check(actual_.get_king_pos(c)))
-    observer_.notify_on_player_check(c);
 
   // is actual player timeout ?
   return 0;
