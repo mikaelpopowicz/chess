@@ -1,0 +1,41 @@
+****************
+* Chess - TODO *
+*              *
+****************
+
+[x] Level 0 : Modeling
+
+
+[x] Level 1 : Input/Output
+
+        - [x] Input pgn
+        - [x] Parse PGN
+        - [x] Listeners
+        - [x] Dynamic library
+
+
+[x] Level 2 : Move checking
+
+        - [x] Basic moves
+        - [x] Capture
+
+
+[.] Level 3 : Rules
+
+        - [x] Checkmate
+        - [ ] Time out
+        - [x] Draw -> Pat
+        - [x] Draw -> 50 last turn
+        - [x] Draw -> threefold repetition
+        - [x] Castling
+        - [x] En passant
+        - [x] Check
+        - [x] Promotion
+
+
+[.] Level 4 : Advanced input
+
+        - [x] Human player
+        - [ ] TODO debug human player
+
+[ ] Level 5 : AI

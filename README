@@ -2,6 +2,7 @@ Chess
 ========
 
 [Description]
+This project is the implementation of a chess game.
 
 How to launch
 -------------
@@ -10,4 +11,5 @@ If the executable 'chess' does not exist :
     `make`  
 
 Then,  
-    `./chess [options] [libs] [PGNfile]`
+    `./chess [--player-white=[human | *.so] --player-black=[human | *.so ]]
+             [*.so ...] [file.pgn]`
