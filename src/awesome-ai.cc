@@ -17,9 +17,15 @@ Move AwesomeAI::move_get()
   else if (nb_move_ < 4)
     move = make_black_opening();
   else
-    std::cout << "minimax and alpha beta LOL" << std::endl;
+    move = minimax();
   nb_move_++;
   return move;
+}
+
+Move AwesomeAI::minimax()
+{
+  int nb_step = 4;
+  /* TODO : RECURSIVE METHODES !!!! */
 }
 
 Move AwesomeAI::make_white_opening()
