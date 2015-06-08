@@ -40,6 +40,26 @@ public:
 
   inline bool operator==(const Chessboard& chessboard) const;
 
+  /*!
+  ** Gives the list of the pieces' position corresponding to the color.
+  */
+  std::vector<Position> get_pieces(Color color);
+  /*!
+  ** This methods finds where the piece on the position pos_piece can go.
+  ** @return the list of this reachable positions
+  */
+  std::vector<Position> get_possible_moves(Position pos_piece);
+  /*!
+  ** Make the move and save it in a history.
+  ** @return true if the move is done and saved
+  */
+  bool apply(Move move);
+  /*
+  ** Undo the last move.
+  ** @return true if the move is well canceled
+  */
+  bool undo();
+
 protected:
   Piece board_[SIZE][SIZE];
   bool white_king_moved_;
@@ -47,6 +67,11 @@ protected:
   Position white_king_;
   Position black_king_;
   Position previous_moved_;
+  /*!
+  ** This vector contains the positions of rooks which have not been moved
+  ** since the begining of the game.
+  */
+  std::set<Position> initial_rooks_;
 
   bool check_pawn_move(Move m, Piece p, bool is_test);
   bool check_rook_move(Move m);

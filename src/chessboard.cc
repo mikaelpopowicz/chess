@@ -39,6 +39,12 @@ Chessboard::Chessboard()
       board_[row][col].set_type(pt);
       board_[row][col].set_color(c);
     }
+
+  // Add the initial positions of the rook
+  initial_rooks_.insert(Position(Position::ANNA, Position::EINS));
+  initial_rooks_.insert(Position(Position::HECTOR, Position::EINS));
+  initial_rooks_.insert(Position(Position::ANNA, Position::ACHT));
+  initial_rooks_.insert(Position(Position::HECTOR, Position::ACHT));
 }
 
 Chessboard::~Chessboard()
@@ -498,6 +504,7 @@ bool Chessboard::check_king_move(Move m, Color c)
     return false;
   else if (!has_king_moved(c))
   {
+    //TODO check if rook pas bougé
     Position::File f_tmp = f_start;
     if (f_end > f_start)
       ++f_tmp;
