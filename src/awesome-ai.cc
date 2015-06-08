@@ -17,14 +17,23 @@ Move AwesomeAI::move_get()
   else if (nb_move_ < 4)
     move = make_black_opening();
   else
-    move = minimax();
+    move = minimax(color_, 4);
   nb_move_++;
   return move;
 }
 
-Move AwesomeAI::minimax()
+Move AwesomeAI::minimax(Color color, int step)
 {
-  int nb_step = 4;
+  if (step == 0)
+    //fonction d'evaluation
+    return Move();
+
+  
+
+  //sinon
+  //On get toute les piece de couleur color
+  //on get tous les mov de toutes les pieces
+  //minimax dessus avec (color inverse, step -1)
   /* TODO : RECURSIVE METHODES !!!! */
 }
 
