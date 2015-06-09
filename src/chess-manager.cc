@@ -54,7 +54,6 @@ int ChessManager::go()
           return 69;
       }
     }
-    std::cout << "players are here" << std::endl;
 
     if (opt.get_libs().size() > 0)
     {
