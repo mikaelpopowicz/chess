@@ -11,6 +11,7 @@
 # include "class-loader.hh"
 # include "observer.hh"
 # include "game-engine.hh"
+# include "ai.hh"
 
 /*!
 ** \brief Chess manager (main)

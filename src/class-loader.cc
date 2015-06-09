@@ -16,7 +16,7 @@ bool ClassLoader::load_libraries(std::vector<std::string> libs)
     void* lib = dlopen(str.c_str(), RTLD_NOW);
     if (!lib)
     {
-      std::cerr << "Can't load lib " << str << ": " << dlerror() << std::endl;
+      std::cerr << dlerror() << std::endl;
       return false;
     }
     ListenerExport* plugin = (ListenerExport*) dlsym(lib, "listener_plugin");
@@ -30,6 +30,25 @@ bool ClassLoader::load_libraries(std::vector<std::string> libs)
     this->plugins_.push_back(plugin);
   }
   return true;
+}
+
+Ai* ClassLoader::get_ia(std::string ia, Color color)
+{
+  void* handle = dlopen(ia.c_str(), RTLD_NOW);
+  if (!handle)
+  {
+    std::cerr << dlerror() << std::endl;
+    return nullptr;
+  }
+  typedef Ai* create_t(Color);
+  create_t* function = (create_t*) dlsym(handle, "ai_create");
+  if (!function)
+  {
+    std::cerr << "Can't load constructor :" << dlerror() << std::endl;
+    return nullptr;
+  }
+  dlclose(handle);
+  return function(color);
 }
 
 std::vector<void*> ClassLoader::get_libs()

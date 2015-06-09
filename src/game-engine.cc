@@ -57,7 +57,7 @@ int GameEngine::play()
     }
 
     //Check move & rules ok
-    if (actual_.check_move(actual_move_, false) == false)
+    if (actual_.check_move(actual_move_) == false)
     {
       observer_.notify_on_player_disqualified(color_turn);
       observer_.notify_on_game_finished();

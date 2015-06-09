@@ -22,6 +22,8 @@ ChessManager::~ChessManager()
 int ChessManager::go()
 {
   OptionParser opt(this->argc_, this->argv_);
+  Observer obs;
+  ClassLoader loader;
   if (opt.parse())
   {
     if (opt.is_pgn())
@@ -38,13 +40,22 @@ int ChessManager::go()
       {
         this->white_ = new PlayerHuman(Color::WHITE);
       }
+      else
+      {
+        if (!(this->white_ = loader.get_ia(opt.get_white_player(), Color::WHITE)))
+          return 69;
+      }
 
       if (opt.get_black_player() == "human")
         this->black_ = new PlayerHuman(Color::BLACK);
+      else
+      {
+        if (!(this->black_ = loader.get_ia(opt.get_black_player(), Color::BLACK)))
+          return 69;
+      }
     }
+    std::cout << "players are here" << std::endl;
 
-    Observer obs;
-    ClassLoader loader;
     if (opt.get_libs().size() > 0)
     {
       if (loader.load_libraries(opt.get_libs()))
@@ -55,6 +66,8 @@ int ChessManager::go()
           obs.add_observer(toAdd);
         }
       }
+      else
+        return 69;
     }
     GameEngine gm(white_, black_, obs);
     return gm.play();
