@@ -86,6 +86,10 @@ int Chessboard::make_move(Move m)
     return -1;
 
   int res = 0;
+  //Move the piece
+  board_[line_start][col_start] = Piece(NONE, BLACK);
+  board_[line_end][col_end] = p;
+
 
   // If the king is moved
   if (p.get_type() == KING)
@@ -167,10 +171,6 @@ int Chessboard::make_move(Move m)
     if (pos != initial_rooks_.end())
       initial_rooks_.erase(pos);
   }
-
-  //Move the piece
-  board_[line_start][col_start] = Piece(NONE, BLACK);
-  board_[line_end][col_end] = p;
 
   history_.push_back(std::make_pair(m, p_end));
   previous_moved_ = m.end_get();
