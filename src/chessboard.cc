@@ -707,7 +707,7 @@ int Chessboard::eval(Color color)
             value = 500;
           if (type == PieceType::QUEEN)
             value = 1000;
-          if (board_[row][col].get_color == color)
+          if (color == board_[row][col].get_color())
             res += value;
           else
             res -= value;
