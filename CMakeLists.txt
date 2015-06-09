@@ -22,3 +22,13 @@ target_link_libraries(
   chess
   -ldl
 )
+
+add_library(
+  pretty-printer
+  SHARED
+  src/listener.hh
+  src/chessboard-interface.cc
+  src/chessboard-adapter.cc
+  src/chessboard.cc
+  src/pretty_printer_listener.cc
+)

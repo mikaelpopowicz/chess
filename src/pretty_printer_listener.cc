@@ -15,22 +15,19 @@ void PrettyPrinterListener::register_chessboard_interface(const ChessboardInterf
 
 void PrettyPrinterListener::on_game_started()
 {
-  std::cout << "CA DEMARRRRRE" << std::endl;
+  board_.print();
 }
 
 void PrettyPrinterListener::on_game_finished()
-{
-  std::cout << "C FINIIIIIIIIIIIIIT" << std::endl;
-}
+{}
 
 void PrettyPrinterListener::on_piece_moved(const PieceType& piece, const Position& from,
                                       const Position& to)
 {
-  std::cout << "PIECE MOOOVEOVOEVO" << std::endl;
   PieceType type = piece;
   type = type;
-  Position pos = from;
-  pos = to;
+  board_.make_move(Move(from, to));
+  board_.print();
 }
 
 void PrettyPrinterListener::on_piece_taken(const PieceType& piece, const Position& at)
