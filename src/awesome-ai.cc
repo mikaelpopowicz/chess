@@ -1,15 +1,18 @@
 #include "awesome-ai.hh"
+#include <climits>
+#include <vector>
 
-AwesomeAI::AwesomeAI(Color color)
-  : color_(color)
+AwesomeAi::AwesomeAi(Color color)
 {
+  color_ = color;
   nb_move_ = 0;
+  name_ = "laubie_g";
 }
 
-AwesomeAI::~AwesomeAI()
+AwesomeAi::~AwesomeAi()
 {}
 
-Move AwesomeAI::move_get()
+Move AwesomeAi::move_get()
 {
   Move move;
   if (nb_move_ < 4 && color_ == Color::WHITE)
@@ -17,18 +20,59 @@ Move AwesomeAI::move_get()
   else if (nb_move_ < 4)
     move = make_black_opening();
   else
-    move = minimax(color_, 4);
+    move = std::get<1>(minimax(color_, 4));
   nb_move_++;
   return move;
 }
 
-Move AwesomeAI::minimax(Color color, int step)
+std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
 {
   if (step == 0)
     //fonction d'evaluation
-    return Move();
+    return std::pair<int, Move>(/*fct eval*/5, Move());
 
-  
+  int value;
+  if (color == color_)
+    value = INT_MIN;
+  else
+    value = INT_MAX;
+
+ //We get all pieces then all the possible moves
+  Vector<Position> pieces_pos = board_.get_pieces(color);
+  Vector<Move> moves;
+  for (Position p_pos : pieces_pos)
+    {
+      Vector<Move> tmp = chessboard.get_possible_moves(p_pos);
+      moves.insert(moves.end(), tmp.begin(), tmp.end());
+    }
+
+  std::pair<int, Move> result(value, Move());
+  bool is_max_turn;
+  if (color == color_)
+    is_max_turn = true;
+  else
+    is_max_turn = false;
+
+  //let's start minimax
+  for (Move cur_move : moves)
+    {
+      Color next_color;
+      if (color == Color::WHITE)
+        next_color = Color::BLACK;
+      else
+        next_color = Color::WHITE;
+      std::pair<int, Move> tmp_res = minimax(next_color, step - 1);
+      if (is_max_turn)
+        {
+          if (std::get<0>(tmp_res) > std::get<0>(result))
+            result = std::pair<int, Move>(std::get<0>(tmp_res), std::get<1>(result));
+        }
+      else
+        {
+          if (std::get<0>(tmp_res) < std::get<0>(result))
+            result = std::pair<int, Move>(std::get<0>(tmp_res), std::get<1>(result));
+        }
+    }
 
   //sinon
   //On get toute les piece de couleur color
@@ -37,7 +81,7 @@ Move AwesomeAI::minimax(Color color, int step)
   /* TODO : RECURSIVE METHODES !!!! */
 }
 
-Move AwesomeAI::make_white_opening()
+Move AwesomeAi::make_white_opening()
 {
   switch (nb_move_)
   {
@@ -77,7 +121,7 @@ Move AwesomeAI::make_white_opening()
   }
 }
 
-Move AwesomeAI::make_black_opening()
+Move AwesomeAi::make_black_opening()
 {
   switch (nb_move_)
   {
@@ -117,7 +161,7 @@ Move AwesomeAI::make_black_opening()
   }
 }
 
-const std::string& AwesomeAI::name_get()
+const std::string& AwesomeAi::name_get()
 {
-  return "laubie_g";
+  return name_;
 }
