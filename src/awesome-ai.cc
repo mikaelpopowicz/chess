@@ -29,7 +29,7 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
 {
   if (step == 0)
     //fonction d'evaluation
-    return std::pair<int, Move>(/*fct eval*/5, Move());
+    return std::pair<int, Move>(board_.eval(color_), Move());
 
   int value;
   bool is_max_turn;
