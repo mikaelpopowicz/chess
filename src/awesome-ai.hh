@@ -3,6 +3,7 @@
 
 # include "ai.hh"
 # include "chessboard.hh"
+# include <utility>
 
 class AwesomeAi : public Ai
 {
@@ -16,11 +17,10 @@ private:
   Chessboard board_;
   int nb_move_;
   std::string name_;
-  Color color_;
 
   std::pair<int, Move> minimax(Color color, int step);
-  std::Move make_white_opening();
-  std::Move make_black_opening();
+  Move make_white_opening();
+  Move make_black_opening();
 
 };
 

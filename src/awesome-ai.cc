@@ -3,8 +3,8 @@
 #include <vector>
 
 AwesomeAi::AwesomeAi(Color color)
+  : Ai(color)
 {
-  color_ = color;
   nb_move_ = 0;
   name_ = "laubie_g";
 }
@@ -32,26 +32,28 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
     return std::pair<int, Move>(/*fct eval*/5, Move());
 
   int value;
+  bool is_max_turn;
   if (color == color_)
-    value = INT_MIN;
+    {
+      value = INT_MIN;
+      is_max_turn = true;
+    }
   else
-    value = INT_MAX;
+    {
+      value = INT_MAX;
+      is_max_turn = false;
+    }
 
  //We get all pieces then all the possible moves
-  Vector<Position> pieces_pos = board_.get_pieces(color);
-  Vector<Move> moves;
+  std::vector<Position> pieces_pos = board_.get_pieces(color);
+  std::vector<Move> moves;
   for (Position p_pos : pieces_pos)
     {
-      Vector<Move> tmp = chessboard.get_possible_moves(p_pos);
+      std::vector<Move> tmp = board_.get_possible_moves(p_pos);
       moves.insert(moves.end(), tmp.begin(), tmp.end());
     }
 
-  std::pair<int, Move> result(value, Move());
-  bool is_max_turn;
-  if (color == color_)
-    is_max_turn = true;
-  else
-    is_max_turn = false;
+  std::pair<int, Move> result(value, moves[0]);
 
   //let's start minimax
   for (Move cur_move : moves)
@@ -61,24 +63,22 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
         next_color = Color::BLACK;
       else
         next_color = Color::WHITE;
+      board_.make_move(cur_move);
       std::pair<int, Move> tmp_res = minimax(next_color, step - 1);
+      board_.undo();
       if (is_max_turn)
         {
           if (std::get<0>(tmp_res) > std::get<0>(result))
-            result = std::pair<int, Move>(std::get<0>(tmp_res), std::get<1>(result));
+            result = std::pair<int, Move>(std::get<0>(tmp_res), cur_move);
         }
       else
         {
           if (std::get<0>(tmp_res) < std::get<0>(result))
-            result = std::pair<int, Move>(std::get<0>(tmp_res), std::get<1>(result));
+            result = std::pair<int, Move>(std::get<0>(tmp_res), cur_move);
         }
     }
 
-  //sinon
-  //On get toute les piece de couleur color
-  //on get tous les mov de toutes les pieces
-  //minimax dessus avec (color inverse, step -1)
-  /* TODO : RECURSIVE METHODES !!!! */
+  return result;
 }
 
 Move AwesomeAi::make_white_opening()
@@ -103,7 +103,7 @@ Move AwesomeAi::make_white_opening()
     {
       //Move the right bishop
       Position begin(Position::FELIX, Position::EINS);
-      Position end(Position::DAVIDn Position::DREI);
+      Position end(Position::DAVID, Position::DREI);
       return Move(begin, end);
     }
     case 3:
@@ -143,7 +143,7 @@ Move AwesomeAi::make_black_opening()
     {
       //Move the right bishop
       Position begin(Position::FELIX, Position::ACHT);
-      Position end(Position::DAVIDn Position::SECHS);
+      Position end(Position::DAVID, Position::SECHS);
       return Move(begin, end);
     }
     case 3:

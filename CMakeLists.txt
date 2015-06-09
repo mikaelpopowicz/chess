@@ -10,6 +10,7 @@ file (
   GLOB_RECURSE
   source_files
   src/observer.cc
+  src/ai.cc
   src/player/player.cc
   src/player/player-abstract.cc
   src/player/player-pgn.cc
@@ -33,6 +34,16 @@ file (
 add_executable(
   chess
   ${source_files}
+)
+
+add_library(
+  ai
+  SHARED
+  src/ai.cc
+  src/awesome-ai.cc
+  src/move.cc
+  src/position.cc
+  src/chessboard.cc
 )
 
 target_link_libraries(
