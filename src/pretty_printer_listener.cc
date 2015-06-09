@@ -1,14 +1,17 @@
 #include "pretty_printer_listener.hh"
 
 PrettyPrinterListener::PrettyPrinterListener()
- : board_()
+  : adapter_(Chessboard())
 {}
 
 PrettyPrinterListener::~PrettyPrinterListener()
 {}
 
 void PrettyPrinterListener::register_chessboard_interface(const ChessboardInterface& chessboard_interface)
-{}
+{
+  ChessboardInterface* test = (ChessboardInterface*) &chessboard_interface;
+  test = test;
+}
 
 void PrettyPrinterListener::on_game_started()
 {

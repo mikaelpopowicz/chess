@@ -3,6 +3,7 @@
 
 # include "listener.hh"
 # include "chessboard.hh"
+# include "chessboard-adapter.hh"
 
 class PrettyPrinterListener : public Listener
 {
@@ -27,6 +28,7 @@ public:
 
 private:
   Chessboard board_;
+  ChessboardAdapter adapter_;
 };
 
 #endif /* PRETTY_PRINTER_LISTENER_ */
