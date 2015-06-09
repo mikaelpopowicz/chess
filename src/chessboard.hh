@@ -30,7 +30,7 @@ public:
   bool has_king_moved(Color c);
   Position get_king_pos(Color c);
 
-  bool check_move(Move m, bool is_test);
+  bool check_move(Move m);
   bool is_player_check(Position pos_king);
   bool is_player_mat(Position pos_king);
   bool is_player_pat(Color c);
@@ -71,9 +71,9 @@ protected:
   ** This vector contains the positions of rooks which have not been moved
   ** since the begining of the game.
   */
-  std::set<Position> initial_rooks_;
+  std::vector<Position> initial_rooks_;
 
-  bool check_pawn_move(Move m, Piece p, bool is_test);
+  bool check_pawn_move(Move m, Piece p);
   bool check_rook_move(Move m);
   bool check_knight_move(Move m);
   bool check_bishop_move(Move m);

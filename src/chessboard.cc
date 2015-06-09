@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 Chessboard::Chessboard()
   : white_king_moved_(false),
@@ -41,10 +42,10 @@ Chessboard::Chessboard()
     }
 
   // Add the initial positions of the rook
-  initial_rooks_.insert(Position(Position::ANNA, Position::EINS));
-  initial_rooks_.insert(Position(Position::HECTOR, Position::EINS));
-  initial_rooks_.insert(Position(Position::ANNA, Position::ACHT));
-  initial_rooks_.insert(Position(Position::HECTOR, Position::ACHT));
+  initial_rooks_.push_back(Position(Position::ANNA, Position::EINS));
+  initial_rooks_.push_back(Position(Position::HECTOR, Position::EINS));
+  initial_rooks_.push_back(Position(Position::ANNA, Position::ACHT));
+  initial_rooks_.push_back(Position(Position::HECTOR, Position::ACHT));
 }
 
 Chessboard::~Chessboard()
@@ -78,17 +79,7 @@ int Chessboard::make_move(Move m)
       line_end == -1 || col_end == -1)
     return -1;
 
-  //Move the piece
-  board_[line_start][col_start] = Piece(NONE, BLACK);
-  board_[line_end][col_end] = p;
-
   int res = 0;
-  // If there is a promotion
-  if (m.promotion_get() != NONE && p.get_type() == PAWN)
-  {
-    res = 1;
-    board_[line_end][col_end].set_type(m.promotion_get());
-  }
 
   // If the king is moved
   if (p.get_type() == KING)
@@ -99,19 +90,37 @@ int Chessboard::make_move(Move m)
     // in case of a castling kingside
     if (!king_moved && m.end_get().file_get() == Position::GUSTAV)
     {
-      // moving the rook
-      board_[line_end][col_end - 1] = board_[line_end][7];
-      board_[line_end][7] = Piece(NONE, BLACK);
-      res = 2;
+      auto pos = std::find(initial_rooks_.begin(), initial_rooks_.end(),
+                           Position(Position::HECTOR,
+                                    get_king_pos(p.get_color()).rank_get()));
+      if (pos != initial_rooks_.end())
+      {
+        // moving the rook
+        board_[line_end][col_end - 1] = board_[line_end][7];
+        board_[line_end][7] = Piece(NONE, BLACK);
+        res = 2;
+        initial_rooks_.erase(pos);
+      }
+      else
+        return -1;
     }
 
     // in case of a castling queenside
     else if (!king_moved && m.end_get().file_get() == Position::CESAR)
     {
-      //moving the rook
-      board_[line_end][col_end + 1] = board_[line_end][0];
-      board_[line_end][0] = Piece(NONE, BLACK);
-      res = 3;
+      auto pos = std::find(initial_rooks_.begin(), initial_rooks_.end(),
+                           Position(Position::ANNA,
+                                    get_king_pos(p.get_color()).rank_get()));
+      if (pos != initial_rooks_.end())
+      {
+        //moving the rook
+        board_[line_end][col_end + 1] = board_[line_end][0];
+        board_[line_end][0] = Piece(NONE, BLACK);
+        res = 3;
+        initial_rooks_.erase(pos);
+      }
+      else
+        return -1;
     }
 
     if (p.get_color() == WHITE)
@@ -128,6 +137,12 @@ int Chessboard::make_move(Move m)
 
   else if (p.get_type() == PAWN)
   {
+    // If there is a promotion
+    if (m.promotion_get() != NONE && p.get_type() == PAWN)
+    {
+      res = 1;
+      board_[line_end][col_end].set_type(m.promotion_get());
+    }
     Position pos(m.end_get().file_get(), m.start_get().rank_get());
     Piece& tmp = get_piece(pos.file_get(), pos.rank_get());
 
@@ -136,11 +151,21 @@ int Chessboard::make_move(Move m)
       ((tmp.get_color() == WHITE && pos.rank_get() == Position::VIER) ||
        (tmp.get_color() == BLACK && pos.rank_get() == Position::FUNF));
     if (en_passant)
-    {
       tmp.set_type(NONE);
-      //TODO o.notify_on_piece_token(tmp.get_type(), pos);
-    }
   }
+
+  else if (p.get_type() == ROOK)
+  {
+    auto pos = std::find(initial_rooks_.begin(), initial_rooks_.end(),
+                         m.start_get());
+    if (pos != initial_rooks_.end())
+      initial_rooks_.erase(pos);
+  }
+
+  //Move the piece
+  board_[line_start][col_start] = Piece(NONE, BLACK);
+  board_[line_end][col_end] = p;
+
   previous_moved_ = m.end_get();
   return res;
 }
@@ -171,7 +196,7 @@ bool Chessboard::is_player_check(Position pos_king)
     Position pos_now(f, r);
     Piece tmp = get_piece(f, r);
     if (tmp.get_type() != NONE && tmp.get_color() != king.get_color() &&
-        check_move(Move(pos_now, pos_king), false))
+        check_move(Move(pos_now, pos_king)))
       return true;
 
     ++f;
@@ -221,7 +246,7 @@ bool Chessboard::is_player_mat(Position pos_king)
       PieceType pt = tmp.get_type();
       Color c = tmp.get_color();
 
-      if (check_move(m, true))
+      if (check_move(m))
       {
         make_move(m);
         bool is_check = is_player_check(get_king_pos(king.get_color()));
@@ -273,7 +298,7 @@ bool Chessboard::is_player_pat(Color c)
   // For each piece, it checks if it can go to the others positions
   for (Position p_piece : pos_pieces)
     for (Position p_other : others)
-      if (check_move(Move(p_piece, p_other), true))
+      if (check_move(Move(p_piece, p_other)))
         return false;
   return true;
 }
@@ -291,7 +316,7 @@ bool Chessboard::is_threefold_repetition(std::vector<Chessboard> history)
   return false;
 }
 
-bool Chessboard::check_move(Move m, bool is_test)
+bool Chessboard::check_move(Move m)
 {
   Piece p = get_piece_pos(m.start_get());
   Position::File f_end = m.end_get().file_get();
@@ -302,7 +327,7 @@ bool Chessboard::check_move(Move m, bool is_test)
     return false;
 
   if (p.get_type() == PAWN)
-    return check_pawn_move(m, p, is_test);
+    return check_pawn_move(m, p);
 
   else if (p.get_type() == KNIGHT)
     return check_knight_move(m);
@@ -322,9 +347,8 @@ bool Chessboard::check_move(Move m, bool is_test)
   return false;
 }
 
-bool Chessboard::check_pawn_move(Move m, Piece p, bool is_test)
+bool Chessboard::check_pawn_move(Move m, Piece p)
 {
-  is_test = is_test;
   Position::File f_start = m.start_get().file_get();
   Position::Rank r_start = m.start_get().rank_get();
   Position::File f_end = m.end_get().file_get();
@@ -479,6 +503,7 @@ bool Chessboard::check_king_move(Move m, Color c)
   Position::File f_end = m.end_get().file_get();
   Position::Rank r_end = m.end_get().rank_get();
 
+  // If it's an 'ordinary' move (one cell distance)
   if (fabs(f_end - f_start) <= 1 && fabs(r_end - r_start) <= 1)
   {
     Position::File f = Position::ANNA;
@@ -488,8 +513,7 @@ bool Chessboard::check_king_move(Move m, Color c)
       Piece tmp = get_piece(f, r);
       if (tmp.get_type() != NONE && tmp.get_type() != KING
           && tmp.get_color() != c
-          && check_move(Move(Position(f, r), Position(f_end, r_end)),
-                        false))
+          && check_move(Move(Position(f, r), Position(f_end, r_end))))
         return false;
       ++f;
       if (f == Position::FILE_LAST)
@@ -500,11 +524,25 @@ bool Chessboard::check_king_move(Move m, Color c)
     }
     return true;
   }
+
+  // If one of the distance (file or rank) is longer than 2
   else if (fabs(f_end - f_start) + fabs(r_end - r_start) > 2)
     return false;
+
+  // else if the king has never moved
   else if (!has_king_moved(c))
   {
-    //TODO check if rook pas bougé
+    //Finding the file of the concerned rook
+    Position::File f_rook = Position::ANNA;
+    if (m.end_get().file_get() == Position::GUSTAV)
+      f_rook = Position::HECTOR;
+    // If the rook concerned has moved, castling is impossible
+    bool rook_moved = std::find(initial_rooks_.begin(),
+                                initial_rooks_.end(),
+                                Position(f_rook, get_king_pos(c).rank_get()))
+                      == initial_rooks_.end();
+    if (rook_moved)
+      return false;
     Position::File f_tmp = f_start;
     if (f_end > f_start)
       ++f_tmp;
@@ -524,8 +562,7 @@ bool Chessboard::check_king_move(Move m, Color c)
         Piece tmp = get_piece(f, r);
         if (tmp.get_type() != NONE && tmp.get_type() != KING
             && tmp.get_color() != c
-            && check_move(Move(Position(f, r),
-                               Position(f_tmp, r_start)), false))
+            && check_move(Move(Position(f, r), Position(f_tmp, r_start))))
           return false;
         ++f;
         if (f == Position::FILE_LAST)
