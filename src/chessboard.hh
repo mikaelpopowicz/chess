@@ -78,6 +78,12 @@ protected:
   bool check_knight_move(Move m);
   bool check_bishop_move(Move m);
   bool check_king_move(Move m, Color c);
+
+  std::vector<Position> get_moves_pawn(Position pos_piece);
+  std::vector<Position> get_moves_rook(Position pos_piece);
+  std::vector<Position> get_moves_knight(Position pos_piece);
+  std::vector<Position> get_moves_bishop(Position pos_piece);
+  std::vector<Position> get_moves_king(Position pos_piece);
 };
 
 # include "chessboard.hxx"

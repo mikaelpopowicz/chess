@@ -665,80 +665,72 @@ std::vector<Position> Chessboard::get_pieces(Color color)
 std::vector<Position> Chessboard::get_possible_moves(Position pos_piece)
 {
   std::vector<Position> pos;
-/*  Position::File f = Position::ANNA;
-  Position::Rank r = Position::EINS;
-
-  while (r != Position::RANK_LAST)
-  {
-    if (check_move(Move(pos_piece, Position(f, r))) == true)
-      pos_possible.push_back(Position(f, r));
-    ++f;
-    if (f == Position::FILE_LAST)
-    {
-      f = Position::ANNA;
-      ++r;
-    }
-  }*/
   Piece p = get_piece_pos(pos_piece);
   if (p.get_type() == PAWN)
-  {
-    Position::Rank r = pos_piece.rank_get();
-    Position::File f = pos_piece.file_get();
+    pos = get_moves_pawn(pos_piece);
+  return pos;
+}
 
-    if (p.get_color() == WHITE)
+std::vector<Position> Chessboard::get_moves_pawn(Position pos_piece)
+{
+  std::vector<Position> pos;
+  Piece p = get_piece_pos(pos_piece);
+  Position::Rank r = pos_piece.rank_get();
+  Position::File f = pos_piece.file_get();
+
+  if (p.get_color() == WHITE)
+  {
+    // If cell next to the pawn
+    if (board_[f - 1][r].get_type() == NONE)
     {
-      // If cell next to the pawn
-      if (board_[f - 1][r].get_type() == NONE)
-      {
-        pos.push_back(Position(f, static_cast<Position::Rank>(r + 1)));
-        // If cell 2 ranks ahead
-        if (r == Position::ZWEI && board_[f - 1][r + 1].get_type() == NONE)
-          pos.push_back(Position(f, static_cast<Position::Rank>(r + 2)));
-      }
-      // If catching piece on the left or en_passant left
-      if (f != Position::ANNA &&
-          ((board_[f - 2][r].get_type() != NONE &&
-            board_[f - 2][r].get_color() != p.get_color()) ||
-           (previous_moved_ == Position(static_cast<Position>(f-1), r) &&
-            board_[f - 2][r].get_type() == NONE) ))
-      {
-        pos.push_back(Position(static_cast<Position::File>(f - 1),
-                               static_cast<Position::Rank>(r + 1));
-      }
-      // If catching piece on the right or en_passant right
-      if (f != Position::HECTOR &&
-               ((board_[f][r].get_type() != NONE &&
-                 board_[f][r].get_color() != p.get_color()) ||
-                (previous_moved_ == Position(static_cast<Position>(f+1), r) &&
-                 board_[f][r].get_type() == NONE) ))
-        pos.push_back(Position(static_cast<Position::File>(f + 1),
-                               static_cast<Position::Rank>(r + 1));
+      pos.push_back(Position(f, static_cast<Position::Rank>(r + 1)));
+      // If cell 2 ranks ahead
+      if (r == Position::ZWEI && board_[f - 1][r + 1].get_type() == NONE)
+        pos.push_back(Position(f, static_cast<Position::Rank>(r + 2)));
     }
-    else if (p.get_color() == BLACK)
+    // If catching piece on the left or en_passant left
+    if (f != Position::ANNA &&
+        ((board_[f - 2][r].get_type() != NONE &&
+          board_[f - 2][r].get_color() != p.get_color()) ||
+         (previous_moved_ == Position(static_cast<Position::File>(f-1), r) &&
+          board_[f - 2][r].get_type() == NONE) ))
     {
-      if (board_[f - 1][r - 2].get_type() == NONE)
-      {
-        pos.push_back(Position(f, static_cast<Position::Rank>(r - 1)));
-        if (r == Position::SIEBEN && board_[f - 1][r - 3].get_type() == NONE)
-          pos.push_back(Position(f, static_cast<Position::Rank>(r - 2)));
-      }
-      if (f != Position::ANNA &&
-          ((board_[f - 2][r - 2].get_type() != NONE &&
-            board_[f - 2][r - 2].get_color() != p.get_color()) ||
-           (previous_moved_ == Position(static_cast<Position>(f-1), r) &&
-            board_[f - 2][r - 1].get_type() == NONE) ))
-      {
-        pos.push_back(Position(static_cast<Position::File>(f - 1),
-                               static_cast<Position::Rank>(r - 1));
-      }
-      if (f != Position::HECTOR &&
-               ((board_[f][r - 2].get_type() != NONE &&
-                 board_[f][r - 2].get_color() != p.get_color()) ||
-                (previous_moved_ == Position(static_cast<Position>(f+1), r) &&
-                 board_[f][r - 2].get_type() == NONE) ))
-        pos.push_back(Position(static_cast<Position::File>(f + 1),
-                               static_cast<Position::Rank>(r - 1));
+      pos.push_back(Position(static_cast<Position::File>(f - 1),
+                             static_cast<Position::Rank>(r + 1)));
     }
+    // If catching piece on the right or en_passant right
+    if (f != Position::HECTOR &&
+        ((board_[f][r].get_type() != NONE &&
+          board_[f][r].get_color() != p.get_color()) ||
+         (previous_moved_ == Position(static_cast<Position::File>(f+1), r) &&
+          board_[f][r].get_type() == NONE) ))
+      pos.push_back(Position(static_cast<Position::File>(f + 1),
+                             static_cast<Position::Rank>(r + 1)));
   }
-  return pos_possible;
+  else if (p.get_color() == BLACK)
+  {
+    if (board_[f - 1][r - 2].get_type() == NONE)
+    {
+      pos.push_back(Position(f, static_cast<Position::Rank>(r - 1)));
+      if (r == Position::SIEBEN && board_[f - 1][r - 3].get_type() == NONE)
+        pos.push_back(Position(f, static_cast<Position::Rank>(r - 2)));
+    }
+    if (f != Position::ANNA &&
+        ((board_[f - 2][r - 2].get_type() != NONE &&
+          board_[f - 2][r - 2].get_color() != p.get_color()) ||
+         (previous_moved_ == Position(static_cast<Position::File>(f-1), r) &&
+          board_[f - 2][r - 1].get_type() == NONE) ))
+    {
+      pos.push_back(Position(static_cast<Position::File>(f - 1),
+                             static_cast<Position::Rank>(r - 1)));
+    }
+    if (f != Position::HECTOR &&
+        ((board_[f][r - 2].get_type() != NONE &&
+          board_[f][r - 2].get_color() != p.get_color()) ||
+         (previous_moved_ == Position(static_cast<Position::File>(f+1), r) &&
+          board_[f][r - 2].get_type() == NONE) ))
+      pos.push_back(Position(static_cast<Position::File>(f + 1),
+                             static_cast<Position::Rank>(r - 1)));
+  }
+  return pos;
 }
