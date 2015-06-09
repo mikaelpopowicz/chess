@@ -15,10 +15,11 @@ public:
   virtual ~Chessboard();
 
   Piece get_piece_pos(const Position& p) const;
+  Piece& get_piece_pos(const Position& p);
   Piece get_piece(Position::File f, Position::Rank r) const;
   Piece& get_piece(Position::File f, Position::Rank r);
   /*!
-  ** Make the move concerned.
+  ** Make the move concerned and save it in a history.
   ** @return 0 if nothing exceptional happened (& move done)
   ** @return 1 if there is a promotion
   ** @return 2 if there's a kingside castling
@@ -26,6 +27,11 @@ public:
   ** @return -1 if no move
   */
   int make_move(Move m);
+  /*
+  ** Undo the last move.
+  ** @return true if the move is well canceled
+  */
+  bool undo();
 
   bool has_king_moved(Color c);
   Position get_king_pos(Color c);
@@ -49,16 +55,6 @@ public:
   ** @return the list of this reachable positions
   */
   std::vector<Position> get_possible_moves(Position pos_piece);
-  /*!
-  ** Make the move and save it in a history.
-  ** @return true if the move is done and saved
-  */
-  bool apply(Move move);
-  /*
-  ** Undo the last move.
-  ** @return true if the move is well canceled
-  */
-  bool undo();
 
 protected:
   Piece board_[SIZE][SIZE];
@@ -72,6 +68,10 @@ protected:
   ** since the begining of the game.
   */
   std::vector<Position> initial_rooks_;
+  /*!
+  ** This vector contains all the previous moves played.
+  */
+  std::vector<std::pair<Move, Piece>> history_;
 
   bool check_pawn_move(Move m, Piece p);
   bool check_rook_move(Move m);

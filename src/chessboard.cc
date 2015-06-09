@@ -57,6 +57,11 @@ Piece Chessboard::get_piece_pos(const Position& p) const
   return get_piece(p.file_get(), p.rank_get());
 }
 
+Piece& Chessboard::get_piece_pos(const Position& p)
+{
+  return get_piece(p.file_get(), p.rank_get());
+}
+
 Piece Chessboard::get_piece(Position::File f, Position::Rank r) const
 {
   return board_[r - 1][f - 1];
@@ -74,6 +79,7 @@ int Chessboard::make_move(Move m)
   int col_start = m.start_get().file_get() - 1;
   int line_end = m.end_get().rank_get() - 1;
   int col_end = m.end_get().file_get() - 1;
+  Piece p_end = get_piece_pos(m.end_get());
 
   if (p.get_type() == NONE || line_start == -1 || col_start == -1 ||
       line_end == -1 || col_end == -1)
@@ -166,8 +172,32 @@ int Chessboard::make_move(Move m)
   board_[line_start][col_start] = Piece(NONE, BLACK);
   board_[line_end][col_end] = p;
 
+  history_.push_back(std::make_pair(m, p_end));
   previous_moved_ = m.end_get();
   return res;
+}
+
+bool Chessboard::undo()
+{
+  if (history_.size() == 0)
+    return false;
+
+  auto todelete = history_.back();
+  Move m_todelete = todelete.first;
+  Position m_start = m_todelete.start_get();
+  Piece piece_tomove = get_piece_pos(m_todelete.end_get());
+  get_piece_pos(m_start).set_type(piece_tomove.get_type());
+  get_piece_pos(m_start).set_color(piece_tomove.get_color());
+
+  if (m_todelete.promotion_get() != NONE)
+    get_piece(m_start.file_get(), m_start.rank_get()).set_type(PAWN);
+
+  history_.erase(history_.end() - 1);
+
+  get_piece_pos(m_todelete.end_get()).set_type(todelete.second.get_type());
+  get_piece_pos(m_todelete.end_get()).set_color(todelete.second.get_color());
+  previous_moved_ = history_.back().first.end_get();
+  return true;
 }
 
 bool Chessboard::has_king_moved(Color c)
@@ -241,10 +271,6 @@ bool Chessboard::is_player_mat(Position pos_king)
 
       Position pos_tmp(f, r);
       Move m(pieces_pos[i], pos_tmp);
-      Move undo(pos_tmp, pieces_pos[i]);
-      Piece& tmp = get_piece(f, r);
-      PieceType pt = tmp.get_type();
-      Color c = tmp.get_color();
 
       if (check_move(m))
       {
@@ -252,14 +278,10 @@ bool Chessboard::is_player_mat(Position pos_king)
         bool is_check = is_player_check(get_king_pos(king.get_color()));
         if (!is_check)
         {
-          make_move(undo);
-          tmp.set_type(pt);
-          tmp.set_color(c);
+          undo();
           return false;
         }
-        make_move(undo);
-        tmp.set_type(pt);
-        tmp.set_color(c);
+        undo();
       }
 
       ++f;
@@ -617,4 +639,45 @@ void Chessboard::print()
   std::cout << "    a  b  c  d  e  f  g  h"
             << std::endl;
   std::cout << std::endl;
+}
+
+std::vector<Position> Chessboard::get_pieces(Color color)
+{
+  std::vector<Position> pos_pieces;
+  Position::File f = Position::ANNA;
+  Position::Rank r = Position::EINS;
+
+  while (r != Position::RANK_LAST)
+  {
+    Piece p_tmp = get_piece(f, r);
+    if (p_tmp.get_type() != NONE && p_tmp.get_color() == color)
+      pos_pieces.push_back(Position(f, r));
+    ++f;
+    if (f == Position::FILE_LAST)
+    {
+      f = Position::ANNA;
+      ++r;
+    }
+  }
+  return pos_pieces;
+}
+
+std::vector<Position> Chessboard::get_possible_moves(Position pos_piece)
+{
+  std::vector<Position> pos_possible;
+  Position::File f = Position::ANNA;
+  Position::Rank r = Position::EINS;
+
+  while (r != Position::RANK_LAST)
+  {
+    if (check_move(Move(pos_piece, Position(f, r))) == true)
+      pos_possible.push_back(Position(f, r));
+    ++f;
+    if (f == Position::FILE_LAST)
+    {
+      f = Position::ANNA;
+      ++r;
+    }
+  }
+  return pos_possible;
 }
