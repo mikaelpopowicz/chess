@@ -681,3 +681,37 @@ std::vector<Position> Chessboard::get_possible_moves(Position pos_piece)
   }
   return pos_possible;
 }
+
+int Chessboard::eval(Color color)
+{
+  int res = 0;
+  //basic eval
+  // pawn = 100 point
+  // bishop / knight = 300 point
+  // rook = 500 point
+  // queen = 1000 point
+
+  for (int row = 0; row < 8; row++)
+    {
+      for (int col = 0; col < 8; col++)
+        {
+          PieceType type = board_[row][col].get_type();
+          int value = 0;
+          if (type == PieceType::PAWN)
+            value = 100;
+          if (type == PieceType::KNIGHT)
+            value = 300;
+          if (type == PieceType::BISHOP)
+            value = 300;
+          if (type == PieceType::ROOK)
+            value = 500;
+          if (type == PieceType::QUEEN)
+            value = 1000;
+          if (color == board_[row][col].get_color())
+            res += value;
+          else
+            res -= value;
+        }
+    }
+  return res;
+}
