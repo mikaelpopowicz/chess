@@ -14,8 +14,9 @@ AwesomeAi::~AwesomeAi()
 
 Move AwesomeAi::move_get()
 {
-  if (nb_move_ > 0 || color_ == BLACK)
-    board_.make_move(last_opponent_move_);
+  cpt_make_ = 0;
+  cpt_undo_ = 0;
+  flag_ = true;
   Move move;
   if (nb_move_ < 4 && color_ == Color::WHITE)
     move = make_white_opening();
@@ -24,17 +25,27 @@ Move AwesomeAi::move_get()
   else
     move = std::get<1>(minimax(color_, 4));
   nb_move_++;
+  //std::cout << "IA board BEFORE " << move << std::endl;
+  //board_.print();
   board_.make_move(move);
-  std::string col = "black";
+  /*std::string col = "black";
   if (color_ == WHITE)
     col = "white";
-  std::cout << "IA board " << col << std::endl;
+  std::cout << "IA board " << col << " " << move << std::endl;
+  std::cout << "cpt_make_ = " << cpt_make_
+            << " ---- cpt_undo_ = " << cpt_undo_ << std::endl;
   board_.print();
-  return move;
+  */return move;
 }
 
 std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
 {
+  if (flag_)
+    {
+      // std::cout << "FIRST MINIMAAAAAAAAAX" << std::endl;
+      //board_.print();
+      flag_ = false;
+    }
   if (step == 0)
     //fonction d'evaluation
     return std::pair<int, Move>(board_.eval(color_), Move());
@@ -52,7 +63,7 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
       is_max_turn = false;
     }
 
- //We get all pieces then all the possible moves
+  //We get all pieces then all the possible moves
   std::vector<Position> pieces_pos = board_.get_pieces(color);
   std::vector<Move> moves;
   for (Position p_pos : pieces_pos)
@@ -71,9 +82,12 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
         next_color = Color::BLACK;
       else
         next_color = Color::WHITE;
-      board_.make_move(cur_move);
+      if (board_.make_move(cur_move) == -1)
+        continue;
+      cpt_make_++;
       std::pair<int, Move> tmp_res = minimax(next_color, step - 1);
-      board_.undo();
+      if (board_.undo())
+        cpt_undo_++;
       if (is_max_turn)
         {
           if (std::get<0>(tmp_res) > std::get<0>(result))
@@ -175,6 +189,7 @@ const std::string& AwesomeAi::name_get() const
 
 void AwesomeAi::last_opponent_move_set(const Move& last_opponent_move)
 {
+  last_opponent_move_ = last_opponent_move;
   board_.make_move(last_opponent_move);
 }
 

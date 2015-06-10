@@ -19,6 +19,9 @@ private:
   Chessboard board_;
   int nb_move_;
   std::string name_;
+  int cpt_make_;
+  int cpt_undo_;
+  bool flag_;
 
   std::pair<int, Move> minimax(Color color, int step);
   Move make_white_opening();

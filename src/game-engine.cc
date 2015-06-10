@@ -46,7 +46,7 @@ int GameEngine::play()
       actual_move_ = p2_->move_get();
       p1_->last_opponent_move_set(actual_move_);
     }
-    std::cout << actual_move_ << std::endl;
+    //std::cout << actual_move_ << std::endl;
 
     // "*" game-termination has a specific move
     Position pos_draw(Position::FILE_LAST, Position::RANK_LAST);
@@ -63,6 +63,10 @@ int GameEngine::play()
     {
       observer_->notify_on_player_disqualified(color_turn);
       observer_->notify_on_game_finished();
+      std::cout << "c1 : ";
+      for (auto m : actual_.get_possible_moves(Position(Position::CESAR, Position::EINS)))
+        std::cout << m << " ; ";
+      std::cout << std::endl;
       return 2;
     }
 
