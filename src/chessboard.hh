@@ -56,6 +56,11 @@ public:
   */
   std::vector<Move> get_possible_moves(Position pos_piece);
 
+  /*!
+  ** Give a value to the chessboard
+  */
+  int eval(Color color);
+
 protected:
   Piece board_[SIZE][SIZE];
   bool white_king_moved_;
