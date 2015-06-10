@@ -11,7 +11,8 @@ public:
   AwesomeAi(Color color);
   ~AwesomeAi();
   Move move_get();
-  const std::string& name_get();
+  void print();
+  const std::string& name_get() const;
 
 private:
   Chessboard board_;
@@ -23,5 +24,7 @@ private:
   Move make_black_opening();
 
 };
+
+AI_EXPORT(AwesomeAi)
 
 #endif /* AWESOME_AI_ */

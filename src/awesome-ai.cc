@@ -161,7 +161,10 @@ Move AwesomeAi::make_black_opening()
   }
 }
 
-const std::string& AwesomeAi::name_get()
+const std::string& AwesomeAi::name_get() const
 {
   return name_;
 }
+
+void AwesomeAi::print()
+{}
