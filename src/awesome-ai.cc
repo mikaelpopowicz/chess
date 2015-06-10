@@ -173,5 +173,10 @@ const std::string& AwesomeAi::name_get() const
   return name_;
 }
 
+void AwesomeAi::last_opponent_move_set(const Move& last_opponent_move)
+{
+  board_.make_move(last_opponent_move);
+}
+
 void AwesomeAi::print()
 {}

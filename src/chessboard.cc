@@ -699,6 +699,8 @@ std::vector<Move> Chessboard::get_moves_rook(Position pos_piece)
            p_tmp.get_type() == NONE))
   {
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
+    if (p_tmp.get_type() != NONE)
+      break;
     p_tmp = get_piece(f_tmp, --r_tmp);
   }
   //DOWN
@@ -709,6 +711,8 @@ std::vector<Move> Chessboard::get_moves_rook(Position pos_piece)
            p_tmp.get_type() == NONE))
   {
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
+    if (p_tmp.get_type() != NONE)
+      break;
     p_tmp = get_piece(f_tmp, ++r_tmp);
   }
   //LEFT
@@ -719,6 +723,8 @@ std::vector<Move> Chessboard::get_moves_rook(Position pos_piece)
            p_tmp.get_type() == NONE))
   {
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
+    if (p_tmp.get_type() != NONE)
+      break;
     p_tmp = get_piece(--f_tmp, r_tmp);
   }
   //RIGHT
@@ -729,6 +735,8 @@ std::vector<Move> Chessboard::get_moves_rook(Position pos_piece)
            p_tmp.get_type() == NONE))
   {
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
+    if (p_tmp.get_type() != NONE)
+      break;
     p_tmp = get_piece(++f_tmp, r_tmp);
   }
   return moves;

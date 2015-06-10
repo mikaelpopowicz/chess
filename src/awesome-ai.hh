@@ -13,6 +13,7 @@ public:
   Move move_get();
   void print();
   const std::string& name_get() const;
+  void last_opponent_move_set(const Move& last_opponent_move);
 
 private:
   Chessboard board_;
