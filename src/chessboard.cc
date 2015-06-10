@@ -552,7 +552,7 @@ bool Chessboard::check_king_move(Move m, Color c)
     return false;
 
   // else if the king has never moved
-  else if (!has_king_moved(c))
+  else if (!has_king_moved(c) && fabs(f_end - f_start) == 2)
   {
     //Finding the file of the concerned rook
     Position::File f_rook = Position::ANNA;
@@ -674,6 +674,12 @@ std::vector<Move> Chessboard::get_possible_moves(Position pos_piece)
     pos = get_moves_bishop(pos_piece);
   else if (p.get_type() == KNIGHT)
     pos = get_moves_knight(pos_piece);
+  else if (p.get_type() == QUEEN)
+  {
+    pos = get_moves_rook(pos_piece);
+    std::vector<Move> tmp = get_moves_bishop(pos_piece);
+    pos.insert(pos.end(), tmp.begin(), tmp.end());
+  }
   return pos;
 }
 
@@ -729,7 +735,24 @@ std::vector<Move> Chessboard::get_moves_rook(Position pos_piece)
 std::vector<Move> Chessboard::get_moves_knight(Position pos_piece)
 {
   std::vector<Move> moves;
-  pos_piece = pos_piece;
+  Piece p = get_piece_pos(pos_piece);
+  Position::File f = pos_piece.file_get();
+  Position::Rank r = pos_piece.rank_get();
+  char x[] = {-2, -2, -1, -1, 1, 1, 2, 2};
+  char y[] = {-1, 1, -2, 2, -2, 2, -1, 1};
+  for (int i = 0; i < 8; ++i)
+  {
+    if (f + x[i] < 9 && f + x[i] > 0 &&
+        r + y[i] < 9 && f + y[i] > 0)
+    {
+      Piece p_tmp = get_piece(static_cast<Position::File>(f + x[i]),
+                              static_cast<Position::Rank>(r + y[i]));
+      if (p_tmp.get_type() == NONE || p_tmp.get_color() != p.get_color())
+        moves.push_back(Move(pos_piece,
+                             Position(static_cast<Position::File>(f + x[i]),
+                                      static_cast<Position::Rank>(r + y[i]))));
+    }
+  }
   return moves;
 }
 
@@ -788,7 +811,38 @@ std::vector<Move> Chessboard::get_moves_bishop(Position pos_piece)
 std::vector<Move> Chessboard::get_moves_king(Position pos_piece)
 {
   std::vector<Move> moves;
-  pos_piece = pos_piece;
+  Piece p = get_piece_pos(pos_piece);
+  Position::Rank r = pos_piece.rank_get();
+  Position::File f = pos_piece.file_get();
+  for (int row = -1; row < 2; ++row)
+  {
+    for (int col = -1; col < 2; ++col)
+    {
+      if (f + col < 9 && f + col > 0 &&
+          r + row < 9 && f + row > 0)
+      {
+        Position pos = Position(static_cast<Position::File>(f + col),
+                                static_cast<Position::Rank>(r + row));
+        if ((get_piece_pos(pos).get_type() == NONE ||
+              get_piece_pos(pos).get_color() != p.get_color()) &&
+            check_king_move(Move(pos_piece, pos), p.get_color()))
+          moves.push_back(Move(pos_piece, pos));
+      }
+    }
+  }
+
+  // Castling queen side
+  Position pcqs = Position(static_cast<Position::File>(f + 2), r);
+  if (( get_piece_pos(pcqs).get_type() == NONE ||
+        get_piece_pos(pcqs).get_color() != p.get_color()) &&
+      check_king_move(Move(pos_piece, pcqs), p.get_color()))
+    moves.push_back(Move(pos_piece, pcqs));
+  // Castling king side
+  Position pcks = Position(static_cast<Position::File>(f - 2), r);
+  if (( get_piece_pos(pcks).get_type() == NONE ||
+        get_piece_pos(pcks).get_color() != p.get_color()) &&
+      check_king_move(Move(pos_piece, pcks), p.get_color()))
+    moves.push_back(Move(pos_piece, pcks));
   return moves;
 }
 
@@ -808,7 +862,7 @@ std::vector<Move> Chessboard::get_moves_pawn(Position pos_piece)
       if (r == Position::SIEBEN)
         prom = QUEEN;
       moves.push_back(Move(pos_piece,
-                         Position(f, static_cast<Position::Rank>(r + 1)), prom));
+                       Position(f, static_cast<Position::Rank>(r + 1)), prom));
 
       // If cell 2 ranks ahead
       if (r == Position::ZWEI && board_[r + 1][f - 1].get_type() == NONE)
@@ -823,8 +877,8 @@ std::vector<Move> Chessboard::get_moves_pawn(Position pos_piece)
           board_[r][f - 2].get_type() == NONE) ))
     {
       moves.push_back(Move(pos_piece,
-                           Position(static_cast<Position::File>(f - 1),
-                                    static_cast<Position::Rank>(r + 1)), prom));
+                          Position(static_cast<Position::File>(f - 1),
+                                   static_cast<Position::Rank>(r + 1)), prom));
     }
     // If catching piece on the right or en_passant right
     if (f != Position::HECTOR &&
@@ -845,7 +899,7 @@ std::vector<Move> Chessboard::get_moves_pawn(Position pos_piece)
       if (r == Position::ZWEI)
         prom = QUEEN;
       moves.push_back(Move(pos_piece,
-                         Position(f, static_cast<Position::Rank>(r - 1)), prom));
+                       Position(f, static_cast<Position::Rank>(r - 1)), prom));
 
       if (r == Position::SIEBEN && board_[r - 3][f - 1].get_type() == NONE)
         moves.push_back(Move(pos_piece,
@@ -867,8 +921,8 @@ std::vector<Move> Chessboard::get_moves_pawn(Position pos_piece)
          (previous_moved_ == Position(static_cast<Position::File>(f+1), r) &&
           board_[r - 2][f].get_type() == NONE) ))
       moves.push_back(Move(pos_piece,
-                           Position(static_cast<Position::File>(f + 1),
-                                    static_cast<Position::Rank>(r - 1)), prom));
+                          Position(static_cast<Position::File>(f + 1),
+                                   static_cast<Position::Rank>(r - 1)), prom));
   }
   return moves;
 }
