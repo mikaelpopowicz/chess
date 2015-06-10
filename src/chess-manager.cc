@@ -7,22 +7,14 @@ ChessManager::ChessManager(int argc, char **argv)
 
 ChessManager::~ChessManager()
 {
-  if (this->white_ != NULL)
-  {
-    this->white_ = NULL;
-    delete this->white_;
-  }
-  if (this->black_ != NULL)
-  {
-    this->black_ = NULL;
-    delete this->black_;
-  }
+  this->white_ = nullptr;
+  this->black_ = nullptr;
 }
 
 int ChessManager::go()
 {
   OptionParser opt(this->argc_, this->argv_);
-  Observer obs;
+  Observer* obs = new Observer();
   ClassLoader loader;
   if (opt.parse())
   {
@@ -60,16 +52,14 @@ int ChessManager::go()
       if (loader.load_libraries(opt.get_libs()))
       {
         for (ListenerExport* plugin : loader.get_plugins())
-        {
-          Listener* toAdd = plugin->create();
-          obs.add_observer(toAdd);
-        }
+          obs->add_observer(plugin->create());
       }
       else
         return 69;
     }
     GameEngine gm(white_, black_, obs);
-    return gm.play();
+    int result = gm.play();
+    return result;
 
   }
   else

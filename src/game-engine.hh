@@ -13,7 +13,7 @@
 class GameEngine
 {
 public:
-  GameEngine(Player* p1, Player* p2, Observer o);
+  GameEngine(Player* p1, Player* p2, Observer* o);
   virtual ~GameEngine();
 
   /*!
@@ -31,7 +31,7 @@ public:
 protected:
   Player* p1_;
   Player* p2_;
-  Observer observer_;
+  Observer* observer_;
   Move actual_move_;
   Position previous_moved_;
   /*!

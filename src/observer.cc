@@ -5,7 +5,10 @@ Observer::Observer()
 {}
 
 Observer::~Observer()
-{}
+{
+  for (Listener* listener : this->listeners_)
+    delete listener;
+}
 
 void Observer::add_observer(Listener* listener)
 {
