@@ -29,6 +29,4 @@ private:
 
 };
 
-AI_EXPORT(AwesomeAi)
-
 #endif /* AWESOME_AI_ */

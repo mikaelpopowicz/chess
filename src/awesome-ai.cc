@@ -195,3 +195,5 @@ void AwesomeAi::last_opponent_move_set(const Move& last_opponent_move)
 
 void AwesomeAi::print()
 {}
+
+AI_EXPORT(AwesomeAi)
