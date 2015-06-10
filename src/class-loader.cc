@@ -6,7 +6,10 @@ ClassLoader::ClassLoader()
 ClassLoader::~ClassLoader()
 {
   for (auto lib : this->libs_)
+  {
     dlclose(lib);
+    lib = nullptr;
+  }
 }
 
 bool ClassLoader::load_libraries(std::vector<std::string> libs)
@@ -24,6 +27,7 @@ bool ClassLoader::load_libraries(std::vector<std::string> libs)
     {
       std::cerr << "Can't load symbol : " << dlerror() << std::endl;
       dlclose(lib);
+      lib = nullptr;
       return false;
     }
     this->libs_.push_back(lib);
@@ -47,7 +51,7 @@ Ai* ClassLoader::get_ia(std::string ia, Color color)
     std::cerr << "Can't load constructor :" << dlerror() << std::endl;
     return nullptr;
   }
-  dlclose(handle);
+  this->libs_.push_back(handle);
   return function(color);
 }
 
