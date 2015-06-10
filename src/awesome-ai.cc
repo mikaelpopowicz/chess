@@ -14,6 +14,8 @@ AwesomeAi::~AwesomeAi()
 
 Move AwesomeAi::move_get()
 {
+  if (nb_move_ > 0 || color_ == BLACK)
+    board_.make_move(last_opponent_move_);
   Move move;
   if (nb_move_ < 4 && color_ == Color::WHITE)
     move = make_white_opening();
@@ -22,6 +24,12 @@ Move AwesomeAi::move_get()
   else
     move = std::get<1>(minimax(color_, 4));
   nb_move_++;
+  board_.make_move(move);
+  std::string col = "black";
+  if (color_ == WHITE)
+    col = "white";
+  std::cout << "IA board " << col << std::endl;
+  board_.print();
   return move;
 }
 
@@ -77,7 +85,6 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
             result = std::pair<int, Move>(std::get<0>(tmp_res), cur_move);
         }
     }
-
   return result;
 }
 
@@ -135,7 +142,7 @@ Move AwesomeAi::make_black_opening()
     case 1:
     {
       //Move the Pawn in front of the king
-      Position begin(Position::EVA, Position::ZWEI);
+      Position begin(Position::EVA, Position::SIEBEN);
       Position end(Position::EVA, Position::SECHS);
       return Move(begin, end);
     }
