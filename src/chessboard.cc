@@ -743,14 +743,13 @@ std::vector<Move> Chessboard::get_moves_knight(Position pos_piece)
   for (int i = 0; i < 8; ++i)
   {
     if (f + x[i] < 9 && f + x[i] > 0 &&
-        r + y[i] < 9 && f + y[i] > 0)
+        r + y[i] < 9 && r + y[i] > 0)
     {
-      Piece p_tmp = get_piece(static_cast<Position::File>(f + x[i]),
+      Position pos = Position(static_cast<Position::File>(f + x[i]),
                               static_cast<Position::Rank>(r + y[i]));
+      Piece p_tmp = get_piece_pos(pos);
       if (p_tmp.get_type() == NONE || p_tmp.get_color() != p.get_color())
-        moves.push_back(Move(pos_piece,
-                             Position(static_cast<Position::File>(f + x[i]),
-                                      static_cast<Position::Rank>(r + y[i]))));
+        moves.push_back(Move(pos_piece, pos));
     }
   }
   return moves;
@@ -770,6 +769,8 @@ std::vector<Move> Chessboard::get_moves_bishop(Position pos_piece)
            p_tmp.get_type() == NONE))
   {
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
+    if (p_tmp.get_type() != NONE)
+      break;
     p_tmp = get_piece(--f_tmp, --r_tmp);
   }
   //UP - RIGHT
@@ -781,6 +782,8 @@ std::vector<Move> Chessboard::get_moves_bishop(Position pos_piece)
            p_tmp.get_type() == NONE))
   {
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
+    if (p_tmp.get_type() != NONE)
+      break;
     p_tmp = get_piece(--f_tmp, ++r_tmp);
   }
   //DOWN - LEFT
@@ -792,6 +795,8 @@ std::vector<Move> Chessboard::get_moves_bishop(Position pos_piece)
            p_tmp.get_type() == NONE))
   {
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
+    if (p_tmp.get_type() != NONE)
+      break;
     p_tmp = get_piece(++f_tmp, --r_tmp);
   }
   //DOWN - RIGHT
@@ -803,6 +808,8 @@ std::vector<Move> Chessboard::get_moves_bishop(Position pos_piece)
            p_tmp.get_type() == NONE))
   {
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
+    if (p_tmp.get_type() != NONE)
+      break;
     p_tmp = get_piece(++f_tmp, ++r_tmp);
   }
   return moves;
