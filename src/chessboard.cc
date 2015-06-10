@@ -674,6 +674,8 @@ std::vector<Move> Chessboard::get_possible_moves(Position pos_piece)
     pos = get_moves_bishop(pos_piece);
   else if (p.get_type() == KNIGHT)
     pos = get_moves_knight(pos_piece);
+  else if (p.get_type() == KING)
+    pos = get_moves_king(pos_piece);
   else if (p.get_type() == QUEEN)
   {
     pos = get_moves_rook(pos_piece);
@@ -826,7 +828,7 @@ std::vector<Move> Chessboard::get_moves_king(Position pos_piece)
     for (int col = -1; col < 2; ++col)
     {
       if (f + col < 9 && f + col > 0 &&
-          r + row < 9 && f + row > 0)
+          r + row < 9 && r + row > 0)
       {
         Position pos = Position(static_cast<Position::File>(f + col),
                                 static_cast<Position::Rank>(r + row));
