@@ -23,12 +23,12 @@ Move AwesomeAi::move_get()
   else if (nb_move_ < 4)
     move = make_black_opening();
   else
-    move = std::get<1>(minimax(color_, 4));
+    move = std::get<1>(minimax(color_, 4, INT_MAX));
   nb_move_++;
   //std::cout << "IA board BEFORE " << move << std::endl;
   //board_.print();
   board_.make_move(move);
-  /*std::string col = "black";
+  /*  std::string col = "black";
   if (color_ == WHITE)
     col = "white";
   std::cout << "IA board " << col << " " << move << std::endl;
@@ -38,7 +38,7 @@ Move AwesomeAi::move_get()
   */return move;
 }
 
-std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
+std::pair<int, Move> AwesomeAi::minimax(Color color, int step, int prev_value)
 {
   if (flag_)
     {
@@ -85,18 +85,22 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step)
       if (board_.make_move(cur_move) == -1)
         continue;
       cpt_make_++;
-      std::pair<int, Move> tmp_res = minimax(next_color, step - 1);
+      std::pair<int, Move> tmp_res = minimax(next_color, step - 1, std::get<0>(result));
       if (board_.undo())
         cpt_undo_++;
       if (is_max_turn)
         {
           if (std::get<0>(tmp_res) > std::get<0>(result))
             result = std::pair<int, Move>(std::get<0>(tmp_res), cur_move);
+          if (std::get<0>(result) > prev_value)
+            break;
         }
       else
         {
           if (std::get<0>(tmp_res) < std::get<0>(result))
             result = std::pair<int, Move>(std::get<0>(tmp_res), cur_move);
+          if (std::get<0>(result) < prev_value)
+            break;
         }
     }
   return result;

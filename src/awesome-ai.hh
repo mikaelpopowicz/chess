@@ -23,7 +23,7 @@ private:
   int cpt_undo_;
   bool flag_;
 
-  std::pair<int, Move> minimax(Color color, int step);
+  std::pair<int, Move> minimax(Color color, int step, int prev_value);
   Move make_white_opening();
   Move make_black_opening();
 
