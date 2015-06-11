@@ -194,6 +194,8 @@ void AwesomeAi::last_opponent_move_set(const Move& last_opponent_move)
 }
 
 void AwesomeAi::print()
-{}
+{
+  board_.print();
+}
 
 AI_EXPORT(AwesomeAi)
