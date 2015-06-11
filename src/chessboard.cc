@@ -962,13 +962,33 @@ int Chessboard::eval(Color color)
           if (type == PieceType::PAWN)
             value = 100;
           if (type == PieceType::KNIGHT)
-            value = 300;
+            {
+              value = 300;
+              value += get_possible_moves(Position(static_cast<Position::File>(col),
+                                                   static_cast<Position::Rank>(row))
+                                          ).size() * 40;
+            }
           if (type == PieceType::BISHOP)
-            value = 300;
+            {
+              value = 300;
+              value += get_possible_moves(Position(static_cast<Position::File>(col),
+                                                   static_cast<Position::Rank>(row))
+                                          ).size() * 15;
+            }
           if (type == PieceType::ROOK)
-            value = 500;
+            {
+              value = 500;
+              value += get_possible_moves(Position(static_cast<Position::File>(col),
+                                                   static_cast<Position::Rank>(row))
+                                          ).size() * 15;
+            }
           if (type == PieceType::QUEEN)
-            value = 1000;
+            {
+              value = 1000;
+              value += get_possible_moves(Position(static_cast<Position::File>(col),
+                                                   static_cast<Position::Rank>(row))
+                                          ).size() * 15;
+            }
           if (color == board_[row][col].get_color())
             res += value;
           else
