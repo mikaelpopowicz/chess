@@ -63,10 +63,12 @@ int GameEngine::play()
     {
       observer_->notify_on_player_disqualified(color_turn);
       observer_->notify_on_game_finished();
+      /*
       std::cout << "c1 : ";
       for (auto m : actual_.get_possible_moves(Position(Position::CESAR, Position::EINS)))
         std::cout << m << " ; ";
       std::cout << std::endl;
+       */
       return 2;
     }
 
