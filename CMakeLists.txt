@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 # Project declaration
 project(Chess)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -g3 -std=c++1y -pedantic")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -g3 -O3 -std=c++1y -pedantic")
 
 IF (UNIX)
   ADD_CUSTOM_TARGET (distclean @echo cleaning for source distribution)
