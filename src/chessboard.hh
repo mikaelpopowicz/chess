@@ -54,7 +54,7 @@ public:
   ** This methods finds where the piece on the position pos_piece can go.
   ** @return the list of this reachable positions
   */
-  std::vector<Move> get_possible_moves(Position pos_piece);
+  std::vector<Move> get_possible_moves(const Position& pos_piece);
 
   /*!
   ** Give a value to the chessboard
@@ -84,11 +84,11 @@ protected:
   bool check_bishop_move(Move m);
   bool check_king_move(Move m, Color c);
 
-  std::vector<Move> get_moves_pawn(Position pos_piece);
-  std::vector<Move> get_moves_rook(Position pos_piece);
-  std::vector<Move> get_moves_knight(Position pos_piece);
-  std::vector<Move> get_moves_bishop(Position pos_piece);
-  std::vector<Move> get_moves_king(Position pos_piece);
+  std::vector<Move> get_moves_pawn(const Position& pos_piece);
+  std::vector<Move> get_moves_rook(const Position& pos_piece);
+  std::vector<Move> get_moves_knight(const Position& pos_piece);
+  std::vector<Move> get_moves_bishop(const Position& pos_piece);
+  std::vector<Move> get_moves_king(const Position& pos_piece);
 };
 
 # include "chessboard.hxx"

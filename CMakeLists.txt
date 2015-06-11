@@ -3,7 +3,31 @@ cmake_minimum_required(VERSION 2.8)
 # Project declaration
 project(Chess)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -g3 -std=c++1y -pedantic -O3")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -g3 -O3 -std=c++1y -pedantic")
+
+IF (UNIX)
+  ADD_CUSTOM_TARGET (distclean @echo cleaning for source distribution)
+  SET(DISTCLEANED
+   cmake.depends
+   cmake.check_depends
+   CMakeCache.txt
+   cmake.check_cache
+   *.cmake
+   Makefile
+   core core.*
+   gmon.out
+   *~
+   CMakeFiles/
+  )
+
+  ADD_CUSTOM_COMMAND(
+    DEPENDS clean
+    COMMENT "distribution clean"
+    COMMAND rm
+    ARGS    -Rf CMakeTmp ${DISTCLEANED}
+    TARGET  distclean
+  )
+ENDIF(UNIX)
 
 # Generation of the source files list
 file (

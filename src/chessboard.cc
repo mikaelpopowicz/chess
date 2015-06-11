@@ -663,7 +663,7 @@ std::vector<Position> Chessboard::get_pieces(Color color)
   return pos_pieces;
 }
 
-std::vector<Move> Chessboard::get_possible_moves(Position pos_piece)
+std::vector<Move> Chessboard::get_possible_moves(const Position& pos_piece)
 {
   std::vector<Move> pos;
   Piece p = get_piece_pos(pos_piece);
@@ -686,7 +686,7 @@ std::vector<Move> Chessboard::get_possible_moves(Position pos_piece)
   return pos;
 }
 
-std::vector<Move> Chessboard::get_moves_rook(Position pos_piece)
+std::vector<Move> Chessboard::get_moves_rook(const Position& pos_piece)
 {
   std::vector<Move> moves;
   Piece p = get_piece_pos(pos_piece);
@@ -694,56 +694,63 @@ std::vector<Move> Chessboard::get_moves_rook(Position pos_piece)
   Position::Rank r_tmp = pos_piece.rank_get();
 
   //UP
-  Piece p_tmp = get_piece(f_tmp, --r_tmp);
-  while (r_tmp != Position::RANK_FIRST &&
-         ((p_tmp.get_type() != NONE && p.get_color() != p_tmp.get_color()) ||
-           p_tmp.get_type() == NONE))
+  --r_tmp;
+  Piece p_tmp;
+  while (r_tmp != Position::RANK_FIRST)
   {
+    p_tmp = get_piece(f_tmp, r_tmp);
+    //If the piece is our color, stop
+    if (p_tmp.get_type() != NONE && p.get_color() == p_tmp.get_color())
+      break;
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
     if (p_tmp.get_type() != NONE)
       break;
-    p_tmp = get_piece(f_tmp, --r_tmp);
+    --r_tmp;
   }
+
   //DOWN
   r_tmp = pos_piece.rank_get();
-  p_tmp = get_piece(f_tmp, ++r_tmp);
-  while (r_tmp != Position::RANK_LAST &&
-         ((p_tmp.get_type() != NONE && p.get_color() != p_tmp.get_color()) ||
-           p_tmp.get_type() == NONE))
+  ++r_tmp;
+  while (r_tmp != Position::RANK_LAST)
   {
+    p_tmp = get_piece(f_tmp, r_tmp);
+    if (p_tmp.get_type() != NONE && p.get_color() == p_tmp.get_color())
+      break;
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
     if (p_tmp.get_type() != NONE)
       break;
-    p_tmp = get_piece(f_tmp, ++r_tmp);
+    ++r_tmp;
   }
   //LEFT
   r_tmp = pos_piece.rank_get();
-  p_tmp = get_piece(--f_tmp, r_tmp);
-  while (f_tmp != Position::FILE_FIRST &&
-         ((p_tmp.get_type() != NONE && p.get_color() != p_tmp.get_color()) ||
-           p_tmp.get_type() == NONE))
+  --f_tmp;
+  while (f_tmp != Position::FILE_FIRST)
   {
+    p_tmp = get_piece(f_tmp, r_tmp);
+    if (p_tmp.get_type() != NONE && p.get_color() == p_tmp.get_color())
+      break;
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
     if (p_tmp.get_type() != NONE)
       break;
-    p_tmp = get_piece(--f_tmp, r_tmp);
+    --f_tmp;
   }
   //RIGHT
   f_tmp = pos_piece.file_get();
-  p_tmp = get_piece(++f_tmp, r_tmp);
-  while (f_tmp != Position::FILE_LAST &&
-         ((p_tmp.get_type() != NONE && p.get_color() != p_tmp.get_color()) ||
-           p_tmp.get_type() == NONE))
+  ++f_tmp;
+  while (f_tmp != Position::FILE_LAST)
   {
+    p_tmp = get_piece(f_tmp, r_tmp);
+    if (p_tmp.get_type() != NONE && p.get_color() == p_tmp.get_color())
+      break;
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
     if (p_tmp.get_type() != NONE)
       break;
-    p_tmp = get_piece(++f_tmp, r_tmp);
+    ++f_tmp;
   }
   return moves;
 }
 
-std::vector<Move> Chessboard::get_moves_knight(Position pos_piece)
+std::vector<Move> Chessboard::get_moves_knight(const Position& pos_piece)
 {
   std::vector<Move> moves;
   Piece p = get_piece_pos(pos_piece);
@@ -766,67 +773,72 @@ std::vector<Move> Chessboard::get_moves_knight(Position pos_piece)
   return moves;
 }
 
-std::vector<Move> Chessboard::get_moves_bishop(Position pos_piece)
+std::vector<Move> Chessboard::get_moves_bishop(const Position& pos_piece)
 {
   std::vector<Move> moves;
   Piece p = get_piece_pos(pos_piece);
-  Position::File f_tmp = pos_piece.file_get();
-  Position::Rank r_tmp = pos_piece.rank_get();
+  Position::File f_tmp = static_cast<Position::File>(pos_piece.file_get() - 1);
+  Position::Rank r_tmp = static_cast<Position::Rank>(pos_piece.rank_get() - 1);
 
   //UP - LEFT
-  Piece p_tmp = get_piece(--f_tmp, --r_tmp);
-  while (r_tmp != Position::RANK_FIRST && f_tmp != Position::FILE_FIRST &&
-         ((p_tmp.get_type() != NONE && p.get_color() != p_tmp.get_color()) ||
-           p_tmp.get_type() == NONE))
+  Piece p_tmp;
+  while (r_tmp != Position::RANK_FIRST && f_tmp != Position::FILE_FIRST)
   {
+    p_tmp = get_piece(f_tmp, r_tmp);
+    if (p_tmp.get_type() != NONE && p.get_color() == p_tmp.get_color())
+      break;
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
     if (p_tmp.get_type() != NONE)
       break;
-    p_tmp = get_piece(--f_tmp, --r_tmp);
+    --f_tmp;
+    --r_tmp;
   }
   //UP - RIGHT
-  r_tmp = pos_piece.rank_get();
-  f_tmp = pos_piece.file_get();
-  p_tmp = get_piece(--f_tmp, ++r_tmp);
-  while (r_tmp != Position::RANK_LAST && f_tmp != Position::FILE_FIRST &&
-         ((p_tmp.get_type() != NONE && p.get_color() != p_tmp.get_color()) ||
-           p_tmp.get_type() == NONE))
+  r_tmp = static_cast<Position::Rank>(pos_piece.rank_get() + 1);
+  f_tmp = static_cast<Position::File>(pos_piece.file_get() - 1);
+  while (r_tmp != Position::RANK_LAST && f_tmp != Position::FILE_FIRST)
   {
+    p_tmp = get_piece(f_tmp, r_tmp);
+    if (p_tmp.get_type() != NONE && p.get_color() == p_tmp.get_color())
+      break;
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
     if (p_tmp.get_type() != NONE)
       break;
-    p_tmp = get_piece(--f_tmp, ++r_tmp);
+    --f_tmp;
+    ++r_tmp;
   }
   //DOWN - LEFT
-  r_tmp = pos_piece.rank_get();
-  f_tmp = pos_piece.file_get();
-  p_tmp = get_piece(++f_tmp, --r_tmp);
-  while (f_tmp != Position::FILE_LAST && r_tmp != Position::RANK_FIRST &&
-         ((p_tmp.get_type() != NONE && p.get_color() != p_tmp.get_color()) ||
-           p_tmp.get_type() == NONE))
+  r_tmp = static_cast<Position::Rank>(pos_piece.rank_get() - 1);
+  f_tmp = static_cast<Position::File>(pos_piece.file_get() + 1);
+  while (f_tmp != Position::FILE_LAST && r_tmp != Position::RANK_FIRST)
   {
+    p_tmp = get_piece(f_tmp, r_tmp);
+    if (p_tmp.get_type() != NONE && p.get_color() == p_tmp.get_color())
+      break;
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
     if (p_tmp.get_type() != NONE)
       break;
-    p_tmp = get_piece(++f_tmp, --r_tmp);
+    ++f_tmp;
+    --r_tmp;
   }
   //DOWN - RIGHT
-  r_tmp = pos_piece.rank_get();
-  f_tmp = pos_piece.file_get();
-  p_tmp = get_piece(++f_tmp, ++r_tmp);
-  while (f_tmp != Position::FILE_LAST && r_tmp != Position::RANK_LAST &&
-         ((p_tmp.get_type() != NONE && p.get_color() != p_tmp.get_color()) ||
-           p_tmp.get_type() == NONE))
+  r_tmp = static_cast<Position::Rank>(pos_piece.rank_get() + 1);
+  f_tmp = static_cast<Position::File>(pos_piece.file_get() + 1);
+  while (f_tmp != Position::FILE_LAST && r_tmp != Position::RANK_LAST)
   {
+    p_tmp = get_piece(f_tmp, r_tmp);
+    if (p_tmp.get_type() != NONE && p.get_color() == p_tmp.get_color())
+      break;
     moves.push_back(Move(pos_piece, Position(f_tmp, r_tmp)));
     if (p_tmp.get_type() != NONE)
       break;
-    p_tmp = get_piece(++f_tmp, ++r_tmp);
+    ++f_tmp;
+    ++r_tmp;
   }
   return moves;
 }
 
-std::vector<Move> Chessboard::get_moves_king(Position pos_piece)
+std::vector<Move> Chessboard::get_moves_king(const Position& pos_piece)
 {
   std::vector<Move> moves;
   Piece p = get_piece_pos(pos_piece);
@@ -864,7 +876,7 @@ std::vector<Move> Chessboard::get_moves_king(Position pos_piece)
   return moves;
 }
 
-std::vector<Move> Chessboard::get_moves_pawn(Position pos_piece)
+std::vector<Move> Chessboard::get_moves_pawn(const Position& pos_piece)
 {
   std::vector<Move> moves;
   Piece p = get_piece_pos(pos_piece);
