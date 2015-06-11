@@ -967,34 +967,37 @@ int Chessboard::eval(Color color)
               value = 300;
               value += get_possible_moves(Position(static_cast<Position::File>(col),
                                                    static_cast<Position::Rank>(row))
-                                          ).size() * 40;
+                                          ).size() * 80;
             }
           if (type == PieceType::BISHOP)
             {
               value = 300;
               value += get_possible_moves(Position(static_cast<Position::File>(col),
                                                    static_cast<Position::Rank>(row))
-                                          ).size() * 15;
+                                          ).size() * 20;
             }
           if (type == PieceType::ROOK)
             {
               value = 500;
               value += get_possible_moves(Position(static_cast<Position::File>(col),
                                                    static_cast<Position::Rank>(row))
-                                          ).size() * 15;
+                                          ).size() * 20;
             }
           if (type == PieceType::QUEEN)
             {
               value = 1000;
               value += get_possible_moves(Position(static_cast<Position::File>(col),
                                                    static_cast<Position::Rank>(row))
-                                          ).size() * 15;
+                                          ).size() * 20;
             }
           if (type == PieceType::KING)
             {
               if (is_player_check(Position(static_cast<Position::File>(col),
                                            static_cast<Position::Rank>(row))))
-                  value = INT_MAX;
+                  value = 20000;
+              if (is_player_mat(Position(static_cast<Position::File>(col),
+                                         static_cast<Position::Rank>(row))))
+                value = INT_MAX;
             }
 
           if (color == board_[row][col].get_color())
