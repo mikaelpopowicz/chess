@@ -66,6 +66,7 @@ add_library(
   src/player/player.cc
   src/ai.cc
   src/awesome-ai.cc
+  src/piece.cc
   src/move.cc
   src/position.cc
   src/chessboard.cc
