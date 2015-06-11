@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <climits>
 
 Chessboard::Chessboard()
   : white_king_moved_(false),
@@ -989,6 +990,13 @@ int Chessboard::eval(Color color)
                                                    static_cast<Position::Rank>(row))
                                           ).size() * 15;
             }
+          if (type == PieceType::KING)
+            {
+              if (is_player_check(Position(static_cast<Position::File>(col),
+                                           static_cast<Position::Rank>(row))))
+                  value = INT_MAX;
+            }
+
           if (color == board_[row][col].get_color())
             res += value;
           else

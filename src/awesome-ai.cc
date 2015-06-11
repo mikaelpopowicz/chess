@@ -28,14 +28,14 @@ Move AwesomeAi::move_get()
   //std::cout << "IA board BEFORE " << move << std::endl;
   //board_.print();
   board_.make_move(move);
-  /*  std::string col = "black";
+  std::string col = "black";
   if (color_ == WHITE)
     col = "white";
   std::cout << "IA board " << col << " " << move << std::endl;
   std::cout << "cpt_make_ = " << cpt_make_
             << " ---- cpt_undo_ = " << cpt_undo_ << std::endl;
   board_.print();
-  */return move;
+  return move;
 }
 
 std::pair<int, Move> AwesomeAi::minimax(Color color, int step, int prev_value)
