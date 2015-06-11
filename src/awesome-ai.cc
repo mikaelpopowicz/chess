@@ -23,7 +23,7 @@ Move AwesomeAi::move_get()
   else if (nb_move_ < 4)
     move = make_black_opening();
   else
-    move = std::get<1>(minimax(color_, 4, INT_MAX));
+    move = std::get<1>(minimax(color_, 1, INT_MAX));
   nb_move_++;
   //std::cout << "IA board BEFORE " << move << std::endl;
   //board_.print();
@@ -85,6 +85,11 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step, int prev_value)
       if (board_.make_move(cur_move) == -1)
         continue;
       cpt_make_++;
+      if (board_.is_player_check(board_.get_king_pos(color_)))
+        {
+          board_.undo();
+          continue;
+        }
       std::pair<int, Move> tmp_res = minimax(next_color, step - 1, std::get<0>(result));
       if (board_.undo())
         cpt_undo_++;
