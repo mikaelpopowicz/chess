@@ -39,6 +39,7 @@ add_executable(
 add_library(
   ai
   SHARED
+  src/player/player.cc
   src/ai.cc
   src/awesome-ai.cc
   src/move.cc
