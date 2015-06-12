@@ -1006,16 +1006,24 @@ int Chessboard::eval(Color color)
             {
               if (is_player_check(Position(static_cast<Position::File>(col),
                                            static_cast<Position::Rank>(row))))
-                  value = 20000;
+                  value = -20000;
               if (is_player_mat(Position(static_cast<Position::File>(col),
                                          static_cast<Position::Rank>(row))))
-                value = INT_MAX;
+                value = INT_MIN;
             }
 
           if (color == board_[row][col].get_color())
-            res += value;
+            {
+              if (value == INT_MIN)
+                return INT_MIN;
+              res += value;
+            }
           else
-            res -= value;
+            {
+              if (value == INT_MIN)
+                return INT_MAX;
+              res -= value;
+            }
         }
     }
   return res;
