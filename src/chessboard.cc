@@ -976,31 +976,31 @@ int Chessboard::eval(Color color)
             value = 100;
           if (type == PieceType::KNIGHT)
             {
-              value = 300;
+              value = 500;
               value += get_possible_moves(Position(static_cast<Position::File>(col),
                                                    static_cast<Position::Rank>(row))
-                                          ).size() * 80;
+                                          ).size() * 50;
             }
           if (type == PieceType::BISHOP)
             {
               value = 300;
               value += get_possible_moves(Position(static_cast<Position::File>(col),
                                                    static_cast<Position::Rank>(row))
-                                          ).size() * 20;
+                                          ).size() * 10;
             }
           if (type == PieceType::ROOK)
             {
-              value = 500;
+              value = 300;
               value += get_possible_moves(Position(static_cast<Position::File>(col),
                                                    static_cast<Position::Rank>(row))
-                                          ).size() * 20;
+                                          ).size() * 10;
             }
           if (type == PieceType::QUEEN)
             {
-              value = 1000;
+              value = 900;
               value += get_possible_moves(Position(static_cast<Position::File>(col),
                                                    static_cast<Position::Rank>(row))
-                                          ).size() * 20;
+                                          ).size() * 10;
             }
           if (type == PieceType::KING)
             {
