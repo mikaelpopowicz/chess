@@ -17,13 +17,14 @@ Move AwesomeAi::move_get()
   cpt_make_ = 0;
   cpt_undo_ = 0;
   flag_ = true;
+  tmp_board_ = board_;
   Move move;
-  if (nb_move_ < 4 && color_ == Color::WHITE)
+  /*if (nb_move_ < 4 && color_ == Color::WHITE)
     move = make_white_opening();
   else if (nb_move_ < 4)
     move = make_black_opening();
   else
-    move = std::get<1>(minimax(color_, 5, INT_MAX));
+    */move = std::get<1>(minimax(color_, 5, INT_MAX));
   nb_move_++;
   //std::cout << "IA board BEFORE " << move << std::endl;
   //board_.print();
@@ -48,7 +49,7 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step, int prev_value)
     }
   if (step == 0)
     //fonction d'evaluation
-    return std::pair<int, Move>(board_.eval(color_), Move());
+    return std::pair<int, Move>(tmp_board_.eval(color_), Move());
 
   int value;
   bool is_max_turn;
@@ -64,11 +65,11 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step, int prev_value)
     }
 
   //We get all pieces then all the possible moves
-  std::vector<Position> pieces_pos = board_.get_pieces(color);
+  std::vector<Position> pieces_pos = tmp_board_.get_pieces(color);
   std::vector<Move> moves;
   for (Position p_pos : pieces_pos)
     {
-      std::vector<Move> tmp = board_.get_possible_moves(p_pos);
+      std::vector<Move> tmp = tmp_board_.get_possible_moves(p_pos);
       moves.insert(moves.end(), tmp.begin(), tmp.end());
     }
 
@@ -82,17 +83,17 @@ std::pair<int, Move> AwesomeAi::minimax(Color color, int step, int prev_value)
         next_color = Color::BLACK;
       else
         next_color = Color::WHITE;
-      if (board_.make_move(cur_move) == -1)
+      if (tmp_board_.make_move(cur_move) == -1)
         continue;
       cpt_make_++;
-      if (board_.is_player_check(board_.get_king_pos(color)))
+      if (tmp_board_.is_player_check(tmp_board_.get_king_pos(color)))
         {
-          if (board_.undo())
+          if (tmp_board_.undo())
             cpt_undo_++;
           continue;
           }
       std::pair<int, Move> tmp_res = minimax(next_color, step - 1, std::get<0>(result));
-      if (board_.undo())
+      if (tmp_board_.undo())
         cpt_undo_++;
       if (is_max_turn)
         {

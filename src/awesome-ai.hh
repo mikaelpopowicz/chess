@@ -17,6 +17,7 @@ public:
 
 private:
   Chessboard board_;
+  Chessboard tmp_board_;
   int nb_move_;
   std::string name_;
   int cpt_make_;
