@@ -36,7 +36,10 @@ Move AwesomeAi::move_get()
   std::cout << "cpt_make_ = " << cpt_make_
             << " ---- cpt_undo_ = " << cpt_undo_ << std::endl;
   board_.print();
-  */return move;
+  */
+  std::cout << "cpt_make_ = " << cpt_make_
+            << " ---- cpt_undo_ = " << cpt_undo_ << std::endl;
+  return move;
 }
 
 std::pair<int, Move> AwesomeAi::minimax(Color color, int step, int prev_value)

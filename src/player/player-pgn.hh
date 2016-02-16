@@ -37,7 +37,7 @@ private:
   std::vector<std::string> moves_;
   std::vector<std::string>::iterator iterator;
   Chessboard board_;
-  bool eat;
+  //bool eat;
 
   Move little_rock();
   Move big_rock();

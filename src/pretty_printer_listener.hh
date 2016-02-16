@@ -3,6 +3,7 @@
 
 # include "listener.hh"
 # include "chessboard.hh"
+# include "move.hh"
 # include "chessboard-adapter.hh"
 
 class PrettyPrinterListener : public Listener

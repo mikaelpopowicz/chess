@@ -401,8 +401,8 @@ bool Chessboard::check_pawn_move(Move m, Piece p)
           || (tmp.get_color() == BLACK && pos.rank_get() == Position::FUNF));
 
     //If the pawn goes on an adjacent column
-    if ((is_whi && r_end == ++r_tmp && fabs(f_start - f_end) == 1)
-        || (!is_whi && r_end == --r_tmp && fabs(f_start - f_end) == 1))
+    if ((is_whi && r_end == ++r_tmp && abs(f_start - f_end) == 1)
+        || (!is_whi && r_end == --r_tmp && abs(f_start - f_end) == 1))
     {
       // If the goal of the pawn is an opponent piece
       if ((p_end.get_color() != p.get_color() && p_end.get_type() != NONE))
@@ -473,8 +473,8 @@ bool Chessboard::check_knight_move(Move m)
   Position::File f_end = m.end_get().file_get();
   Position::Rank r_end = m.end_get().rank_get();
 
-  if ((fabs(f_start - f_end) == 2 && fabs(r_start - r_end) == 1)
-      ||(fabs(f_start - f_end) == 1 && fabs(r_start - r_end) == 2))
+  if ((abs(f_start - f_end) == 2 && abs(r_start - r_end) == 1)
+      ||(abs(f_start - f_end) == 1 && abs(r_start - r_end) == 2))
     return true;
 
   return false;
@@ -487,7 +487,7 @@ bool Chessboard::check_bishop_move(Move m)
   Position::File f_end = m.end_get().file_get();
   Position::Rank r_end = m.end_get().rank_get();
   // If in diagonal
-  if (fabs(f_start - f_end) == fabs(r_start - r_end))
+  if (abs(f_start - f_end) == abs(r_start - r_end))
   {
     // Check if there is no piece
     Position::File f_tmp = f_start;
@@ -527,7 +527,7 @@ bool Chessboard::check_king_move(Move m, Color c)
   Position::Rank r_end = m.end_get().rank_get();
 
   // If it's an 'ordinary' move (one cell distance)
-  if (fabs(f_end - f_start) <= 1 && fabs(r_end - r_start) <= 1)
+  if (abs(f_end - f_start) <= 1 && abs(r_end - r_start) <= 1)
   {
     Position::File f = Position::ANNA;
     Position::Rank r = Position::EINS;
@@ -549,11 +549,11 @@ bool Chessboard::check_king_move(Move m, Color c)
   }
 
   // If one of the distance (file or rank) is longer than 2
-  else if (fabs(f_end - f_start) + fabs(r_end - r_start) > 2)
+  else if (abs(f_end - f_start) + abs(r_end - r_start) > 2)
     return false;
 
   // else if the king has never moved
-  else if (!has_king_moved(c) && fabs(f_end - f_start) == 2)
+  else if (!has_king_moved(c) && abs(f_end - f_start) == 2)
   {
     //Finding the file of the concerned rook
     Position::File f_rook = Position::ANNA;

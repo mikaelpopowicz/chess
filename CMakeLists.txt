@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 # Project declaration
 project(Chess)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -g3 -O3 -std=c++1y -pedantic")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -g3 -O3 -std=c++1y -pedantic")
 
 IF (UNIX)
   ADD_CUSTOM_TARGET (distclean @echo cleaning for source distribution)
@@ -80,7 +80,10 @@ target_link_libraries(
 add_library(
   pretty-printer
   SHARED
-  src/listener.hh
+  src/listener.cc
+  src/position.cc
+  src/move.cc
+  src/piece.cc
   src/chessboard-interface.cc
   src/chessboard-adapter.cc
   src/chessboard.cc
