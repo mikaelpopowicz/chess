@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 # Project declaration
 project(Chess)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -g3 -O3 -std=c++1y -pedantic")
+set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
 
 IF (UNIX)
   ADD_CUSTOM_TARGET (distclean @echo cleaning for source distribution)
